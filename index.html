@@ -411,6 +411,11 @@
     .agent-contact { display: none; }
   }
 
+  /* ─── PROVINCE BANNER ─── */
+  .zone-info { line-height: 1.7; }
+  .zone-info br + span { margin-top: 3px; }
+  #inp-province { width: 220px; }
+
   /* ─── EXTRA ACTION BUTTONS ─── */
   .action-btn {
     display: inline-flex; align-items: center; gap: 6px;
@@ -610,14 +615,14 @@
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">Insure<span>Match</span></a>
-  <span class="nav-tag">Ontario · 2026</span>
+  <span class="nav-tag" id="nav-province-tag">Ontario · 2026</span>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-eyebrow">Auto Insurance Comparison</div>
-  <h1>Find the <em>lowest rate</em><br>for your vehicle in Ontario</h1>
-  <p>Real insurer estimates sorted by price — adjusted for your postal code risk zone, vehicle class, and coverage level.</p>
+  <div class="hero-eyebrow">Auto Insurance Comparison · Canada &amp; USA</div>
+  <h1>Find the <em>lowest rate</em><br>for your vehicle in Canada &amp; USA</h1>
+  <p>Real insurer estimates sorted by price — adjusted for your country, state or province, vehicle class, and coverage level.</p>
   <div class="vehicle-strip" id="vehicle-strip">
     <div>
       <div class="label">Vehicle</div>
@@ -632,6 +637,11 @@
     <div>
       <div class="label">Coverage</div>
       <div class="value" id="strip-coverage">Minimum Liability</div>
+    </div>
+    <div class="sep"></div>
+    <div>
+      <div class="label">Province</div>
+      <div class="value" id="strip-province">Ontario</div>
     </div>
     <div class="sep"></div>
     <div class="badge" id="strip-zone">📍 N2G — Medium risk</div>
@@ -654,34 +664,17 @@
         <input class="postal" id="inp-vin" type="text" maxlength="17" value="WDDSJ4GB8HN400526" placeholder="17-character VIN" style="width:180px;letter-spacing:1px;" oninput="this.value=this.value.toUpperCase()">
       </div>
       <div class="field-group">
-        <label>Coverage level</label>
-        <select id="inp-coverage">
-          <option value="min" selected>Minimum Liability</option>
-          <option value="std">Standard Full Coverage</option>
-          <option value="prem">Premium Full Coverage</option>
+        <label>Country</label>
+        <select id="inp-country" onchange="onCountryChange()" style="width:140px">
+          <option value="CA" selected>🇨🇦 Canada</option>
+          <option value="US">🇺🇸 United States</option>
         </select>
       </div>
       <div class="field-group">
-        <label>Ontario postal code</label>
-        <input class="postal" id="inp-postal" type="text" maxlength="7" value="N2G 1A1" placeholder="N2G 1A1">
+        <label id="region-label">Province / Territory</label>
+        <select id="inp-province" onchange="onProvinceChange()" style="width:210px">
+        </select>
       </div>
-      <button class="update-btn" onclick="updateRates()">Update rates →</button>
-    </div>
-    <div class="lookup-actions">
-      <button class="action-btn vehicle-btn" onclick="openVehicleModal()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        Know Your Vehicle
-      </button>
-      <button class="action-btn resale-btn" onclick="openResaleModal()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-        Resale Value
-      </button>
-    </div>
-    <div class="zone-info zone-medium show" id="zone-info">
-      📍 <strong>Kitchener-Waterloo (N2G)</strong> — Medium risk zone. Rates at provincial average.
-    </div>
-    <div class="error-msg" id="error-msg">⚠ Please enter a valid Ontario postal code (e.g. N2G 1A1).</div>
-  </div>
 
   <!-- RESULTS -->
   <div class="section-header">
@@ -695,9 +688,9 @@
   <div class="tips-banner">
     <h3>How to get the best rate</h3>
     <div class="tips-grid">
-      <div class="tip-item"><strong>Get 3+ quotes</strong>Comparing providers can save $250–$850/year in Ontario. Use ratehub.ca or rates.ca simultaneously.</div>
+      <div class="tip-item"><strong>Get 3+ quotes</strong>Comparing providers can save $250–$850/year in Canada; $300–$1,200/year in the US.</div>
       <div class="tip-item"><strong>Bundle home + auto</strong>Most major insurers offer 15–25% off when you bundle your home and auto policies.</div>
-      <div class="tip-item"><strong>Try telematics</strong>Usage-based programs (myDrive, MyAdvantage, MyPace) can cut premiums 10–30% for safe drivers.</div>
+      <div class="tip-item"><strong>Try telematics</strong>Usage-based programs can cut premiums 10–30% for safe drivers in both Canada and the US.</div>
       <div class="tip-item"><strong>Postal code matters</strong>Moving from Brampton to Kitchener can cut your insurance by 25–35% on the same vehicle.</div>
     </div>
   </div>
@@ -780,6 +773,185 @@ function stars(r) {
   return Array.from({length:5}, (_,i) => i < Math.round(r) ? '★' : '☆').join('');
 }
 
+
+/* ══════════════════════════════════════════════
+   REGIONS — CANADA & USA
+   ══════════════════════════════════════════════ */
+
+const CA_PROVINCES = {
+  ON: { name:"Ontario",                 avgAdj:0.00,  system:"private", minLiability:"$200,000", note:"Highest average premiums in Canada. Private market regulated by FSRA.",          postalHint:"e.g. N2G 1A1", currency:"CAD" },
+  AB: { name:"Alberta",                 avgAdj:-0.12, system:"private", minLiability:"$200,000", note:"Private insurance, regulated by Alberta Superintendent of Insurance.",            postalHint:"e.g. T2P 1J9", currency:"CAD" },
+  BC: { name:"British Columbia",        avgAdj:-0.08, system:"public",  minLiability:"$200,000", note:"ICBC public insurance. Basic coverage mandatory; optional from private insurers.", postalHint:"e.g. V6B 1A1", currency:"CAD" },
+  MB: { name:"Manitoba",                avgAdj:-0.18, system:"public",  minLiability:"$200,000", note:"MPI public insurance (Manitoba Public Insurance). All basic coverage is public.",  postalHint:"e.g. R3C 1A1", currency:"CAD" },
+  NB: { name:"New Brunswick",           avgAdj:-0.22, system:"private", minLiability:"$200,000", note:"Private market. Among the lowest premiums in Atlantic Canada.",                    postalHint:"e.g. E1C 1A1", currency:"CAD" },
+  NL: { name:"Newfoundland & Labrador", avgAdj:-0.15, system:"private", minLiability:"$200,000", note:"Private market. Rates have risen sharply in recent years.",                       postalHint:"e.g. A1C 1A1", currency:"CAD" },
+  NS: { name:"Nova Scotia",             avgAdj:-0.20, system:"private", minLiability:"$500,000", note:"Private market. Highest minimum liability in Canada at $500,000.",                postalHint:"e.g. B3H 1A1", currency:"CAD" },
+  PE: { name:"Prince Edward Island",    avgAdj:-0.25, system:"private", minLiability:"$200,000", note:"Private market. Smallest province — lowest overall premiums in Canada.",          postalHint:"e.g. C1A 1A1", currency:"CAD" },
+  QC: { name:"Quebec",                  avgAdj:-0.30, system:"hybrid",  minLiability:"$50,000",  note:"Hybrid: SAAQ covers bodily injury (public); property damage is private.",         postalHint:"e.g. G1R 1A1", currency:"CAD" },
+  SK: { name:"Saskatchewan",            avgAdj:-0.20, system:"public",  minLiability:"$200,000", note:"SGI public insurance (Saskatchewan Government Insurance).",                        postalHint:"e.g. S4P 1A1", currency:"CAD" },
+  NT: { name:"Northwest Territories",   avgAdj:-0.28, system:"private", minLiability:"$200,000", note:"Private market. Very low population density keeps rates low.",                    postalHint:"e.g. X1A 1A1", currency:"CAD" },
+  NU: { name:"Nunavut",                 avgAdj:-0.30, system:"private", minLiability:"$200,000", note:"Private market. Remote territory — limited insurer options available.",            postalHint:"e.g. X0A 1A1", currency:"CAD" },
+  YT: { name:"Yukon",                   avgAdj:-0.26, system:"private", minLiability:"$200,000", note:"Private market. Among the most affordable provinces and territories.",             postalHint:"e.g. Y1A 1A1", currency:"CAD" },
+};
+
+const US_STATES = {
+  AL: { name:"Alabama",             avgAdj:-0.18, minLiability:"$25,000",  note:"Low minimum liability. Uninsured motorist rate is high — consider higher limits.", postalHint:"e.g. 35203", currency:"USD" },
+  AK: { name:"Alaska",              avgAdj:-0.05, minLiability:"$50,000",  note:"High minimum liability requirement. Remote geography adds to repair costs.",        postalHint:"e.g. 99501", currency:"USD" },
+  AZ: { name:"Arizona",             avgAdj:-0.10, minLiability:"$25,000",  note:"High rate of uninsured drivers. Rates rising due to extreme weather events.",       postalHint:"e.g. 85001", currency:"USD" },
+  AR: { name:"Arkansas",            avgAdj:-0.20, minLiability:"$25,000",  note:"Below-average premiums. At-fault state with tort system.",                          postalHint:"e.g. 72201", currency:"USD" },
+  CA: { name:"California",          avgAdj:0.15,  minLiability:"$15,000",  note:"Among the most expensive US states. Low minimums but high litigation costs.",       postalHint:"e.g. 90210", currency:"USD" },
+  CO: { name:"Colorado",            avgAdj:0.05,  minLiability:"$25,000",  note:"Rates rising due to hail, wildfires, and increased litigation.",                    postalHint:"e.g. 80202", currency:"USD" },
+  CT: { name:"Connecticut",         avgAdj:0.08,  minLiability:"$25,000",  note:"High cost of living drives elevated repair and medical costs.",                     postalHint:"e.g. 06103", currency:"USD" },
+  DE: { name:"Delaware",            avgAdj:0.10,  minLiability:"$25,000",  note:"One of the highest per-capita premiums in the US. Dense traffic, high litigation.", postalHint:"e.g. 19901", currency:"USD" },
+  FL: { name:"Florida",             avgAdj:0.30,  minLiability:"$10,000",  note:"2nd most expensive US state. High fraud, hurricanes, and litigation costs.",        postalHint:"e.g. 33101", currency:"USD" },
+  GA: { name:"Georgia",             avgAdj:0.05,  minLiability:"$25,000",  note:"Above-average rates. High accident frequency in Atlanta metro area.",               postalHint:"e.g. 30301", currency:"USD" },
+  HI: { name:"Hawaii",              avgAdj:-0.02, minLiability:"$20,000",  note:"No-fault state. Lower rates due to driving limits on islands.",                     postalHint:"e.g. 96801", currency:"USD" },
+  ID: { name:"Idaho",               avgAdj:-0.28, minLiability:"$25,000",  note:"Among the cheapest states. Low traffic density and accident rates.",                postalHint:"e.g. 83702", currency:"USD" },
+  IL: { name:"Illinois",            avgAdj:-0.05, minLiability:"$25,000",  note:"Near-average US rates. Chicago metro significantly more expensive than rural areas.",postalHint:"e.g. 60601", currency:"USD" },
+  IN: { name:"Indiana",             avgAdj:-0.15, minLiability:"$25,000",  note:"Below-average rates. Low cost of living keeps claims costs down.",                  postalHint:"e.g. 46204", currency:"USD" },
+  IA: { name:"Iowa",                avgAdj:-0.25, minLiability:"$20,000",  note:"One of the cheapest states. Low population density, few serious accidents.",        postalHint:"e.g. 50309", currency:"USD" },
+  KS: { name:"Kansas",              avgAdj:-0.15, minLiability:"$25,000",  note:"No-fault state. Moderate rates; severe hail weather adds comprehensive costs.",     postalHint:"e.g. 66101", currency:"USD" },
+  KY: { name:"Kentucky",            avgAdj:0.05,  minLiability:"$25,000",  note:"No-fault state with choice option. Rates elevated by high uninsured driver rate.",  postalHint:"e.g. 40601", currency:"USD" },
+  LA: { name:"Louisiana",           avgAdj:0.40,  minLiability:"$15,000",  note:"Most expensive US state. Extreme litigation, flooding, and high fraud.",            postalHint:"e.g. 70112", currency:"USD" },
+  ME: { name:"Maine",               avgAdj:-0.30, minLiability:"$50,000",  note:"Cheapest state in the US. Low traffic, few accidents, good road safety record.",    postalHint:"e.g. 04101", currency:"USD" },
+  MD: { name:"Maryland",            avgAdj:0.08,  minLiability:"$30,000",  note:"Above-average rates. Dense DC suburb traffic and high uninsured motorist rates.",   postalHint:"e.g. 21201", currency:"USD" },
+  MA: { name:"Massachusetts",       avgAdj:0.12,  minLiability:"$20,000",  note:"No-fault state with managed competition. High repair costs and dense traffic.",     postalHint:"e.g. 02101", currency:"USD" },
+  MI: { name:"Michigan",            avgAdj:0.45,  minLiability:"$20,000",  note:"Most expensive US state historically. Unlimited PIP required by law.",              postalHint:"e.g. 48201", currency:"USD" },
+  MN: { name:"Minnesota",           avgAdj:-0.08, minLiability:"$30,000",  note:"No-fault state. Moderate rates; severe winters increase comprehensive claims.",     postalHint:"e.g. 55101", currency:"USD" },
+  MS: { name:"Mississippi",         avgAdj:-0.12, minLiability:"$25,000",  note:"Below-average rates. High uninsured driver rate — consider UM coverage.",           postalHint:"e.g. 39201", currency:"USD" },
+  MO: { name:"Missouri",            avgAdj:-0.10, minLiability:"$25,000",  note:"Near-average rates. Higher in Kansas City and St. Louis metro areas.",              postalHint:"e.g. 63101", currency:"USD" },
+  MT: { name:"Montana",             avgAdj:-0.15, minLiability:"$25,000",  note:"Low population keeps rates moderate. Long distances increase roadside risk.",        postalHint:"e.g. 59601", currency:"USD" },
+  NE: { name:"Nebraska",            avgAdj:-0.18, minLiability:"$25,000",  note:"Below-average rates. Hail events can spike comprehensive coverage costs.",           postalHint:"e.g. 68501", currency:"USD" },
+  NV: { name:"Nevada",              avgAdj:0.18,  minLiability:"$25,000",  note:"Among highest US rates. High tourism traffic, Las Vegas accident frequency.",       postalHint:"e.g. 89101", currency:"USD" },
+  NH: { name:"New Hampshire",       avgAdj:-0.25, minLiability:"$0",       note:"Only US state with no mandatory auto insurance. Low rates when purchased.",          postalHint:"e.g. 03301", currency:"USD" },
+  NJ: { name:"New Jersey",          avgAdj:0.25,  minLiability:"$15,000",  note:"One of the most expensive states. Dense population, high litigation, PIP costs.",   postalHint:"e.g. 07101", currency:"USD" },
+  NM: { name:"New Mexico",          avgAdj:-0.05, minLiability:"$25,000",  note:"Near-average rates. High uninsured driver population in rural areas.",               postalHint:"e.g. 87101", currency:"USD" },
+  NY: { name:"New York",            avgAdj:0.28,  minLiability:"$25,000",  note:"3rd most expensive US state. NYC is among the priciest cities in the world.",       postalHint:"e.g. 10001", currency:"USD" },
+  NC: { name:"North Carolina",      avgAdj:-0.15, minLiability:"$30,000",  note:"Below-average rates with unique reinsurance facility for high-risk drivers.",       postalHint:"e.g. 27601", currency:"USD" },
+  ND: { name:"North Dakota",        avgAdj:-0.22, minLiability:"$25,000",  note:"Low rates. No-fault state. Severe winters increase comprehensive claims.",           postalHint:"e.g. 58501", currency:"USD" },
+  OH: { name:"Ohio",                avgAdj:-0.20, minLiability:"$25,000",  note:"One of the cheapest states. Competitive private market keeps rates low.",            postalHint:"e.g. 43215", currency:"USD" },
+  OK: { name:"Oklahoma",            avgAdj:-0.05, minLiability:"$25,000",  note:"Near-average rates. Severe weather (tornadoes/hail) drives comprehensive costs.",   postalHint:"e.g. 73102", currency:"USD" },
+  OR: { name:"Oregon",              avgAdj:-0.08, minLiability:"$25,000",  note:"Below-average rates. Competitive market; Portland metro higher than rural.",        postalHint:"e.g. 97201", currency:"USD" },
+  PA: { name:"Pennsylvania",        avgAdj:0.02,  minLiability:"$15,000",  note:"Choice no-fault state. Philadelphia among most expensive US cities for insurance.", postalHint:"e.g. 17101", currency:"USD" },
+  RI: { name:"Rhode Island",        avgAdj:0.15,  minLiability:"$25,000",  note:"Small state with high density. Among more expensive northeastern states.",           postalHint:"e.g. 02903", currency:"USD" },
+  SC: { name:"South Carolina",      avgAdj:-0.08, minLiability:"$25,000",  note:"Below-average rates. High uninsured driver rate — UM coverage strongly advised.",   postalHint:"e.g. 29201", currency:"USD" },
+  SD: { name:"South Dakota",        avgAdj:-0.22, minLiability:"$25,000",  note:"Low rates. Low traffic density; wildlife collision risk adds comprehensive costs.",  postalHint:"e.g. 57501", currency:"USD" },
+  TN: { name:"Tennessee",           avgAdj:-0.12, minLiability:"$25,000",  note:"Below-average rates. Competitive market with multiple insurer options.",             postalHint:"e.g. 37201", currency:"USD" },
+  TX: { name:"Texas",               avgAdj:0.10,  minLiability:"$30,000",  note:"Above-average rates. Hail, flooding, high traffic in Houston/DFW metros.",          postalHint:"e.g. 78701", currency:"USD" },
+  UT: { name:"Utah",                avgAdj:-0.05, minLiability:"$25,000",  note:"No-fault state. Moderate rates; Salt Lake City growing traffic congestion.",         postalHint:"e.g. 84101", currency:"USD" },
+  VT: { name:"Vermont",             avgAdj:-0.28, minLiability:"$25,000",  note:"Second cheapest state. Low traffic, rural roads, strong safety culture.",            postalHint:"e.g. 05601", currency:"USD" },
+  VA: { name:"Virginia",            avgAdj:-0.10, minLiability:"$30,000",  note:"Below-average rates. DC suburb areas significantly more expensive.",                 postalHint:"e.g. 23219", currency:"USD" },
+  WA: { name:"Washington",          avgAdj:-0.05, minLiability:"$25,000",  note:"Near-average rates. Seattle metro higher; competitive statewide market.",            postalHint:"e.g. 98101", currency:"USD" },
+  WV: { name:"West Virginia",       avgAdj:0.02,  minLiability:"$25,000",  note:"Slightly above average. High rate of uninsured drivers; rural road risks.",         postalHint:"e.g. 25301", currency:"USD" },
+  WI: { name:"Wisconsin",           avgAdj:-0.22, minLiability:"$25,000",  note:"Among cheapest states. Low fraud rates, competitive market, safe drivers.",         postalHint:"e.g. 53701", currency:"USD" },
+  WY: { name:"Wyoming",             avgAdj:-0.18, minLiability:"$25,000",  note:"Low rates due to sparse population. Wildlife collisions common — add comprehensive.",postalHint:"e.g. 82001", currency:"USD" },
+  DC: { name:"Washington D.C.",     avgAdj:0.22,  minLiability:"$25,000",  note:"Very high rates. Dense urban traffic, high theft rate, expensive repairs.",         postalHint:"e.g. 20001", currency:"USD" },
+};
+
+const SYSTEM_LABELS = { private:"Private market", public:"Public insurer", hybrid:"Hybrid (public/private)", tort:"Tort (at-fault)", nofault:"No-fault" };
+const SYSTEM_COLORS = { private:"var(--accent-light)", public:"#e6f1fb", hybrid:"var(--amber-light)", tort:"var(--accent-light)", nofault:"#e6f1fb" };
+const SYSTEM_TEXT   = { private:"var(--accent)", public:"#185fa5", hybrid:"var(--amber)", tort:"var(--accent)", nofault:"#185fa5" };
+
+const CA_OPTIONS = Object.entries(CA_PROVINCES).map(([k,v]) => `<option value="${k}">${v.name}</option>`).join('');
+const US_OPTIONS = Object.entries(US_STATES).map(([k,v]) => `<option value="${k}">${v.name}</option>`).join('');
+
+function getSelectedCountry() {
+  return document.getElementById('inp-country').value || 'CA';
+}
+
+function getSelectedProvince() {
+  return document.getElementById('inp-province').value || 'ON';
+}
+
+function getRegionData(country, code) {
+  return country === 'CA' ? CA_PROVINCES[code] : US_STATES[code];
+}
+
+function onCountryChange() {
+  const country = getSelectedCountry();
+  const sel = document.getElementById('inp-province');
+  if (country === 'CA') {
+    sel.innerHTML = CA_OPTIONS;
+    sel.value = 'ON';
+    document.getElementById('region-label').textContent = 'Province / Territory';
+  } else {
+    sel.innerHTML = US_OPTIONS;
+    sel.value = 'TX';
+    document.getElementById('region-label').textContent = 'State';
+  }
+  onProvinceChange();
+}
+
+
+
+function onProvinceChange() {
+  const country = getSelectedCountry();
+  const code    = getSelectedProvince();
+  const region  = getRegionData(country, code);
+  if (!region) return;
+  document.getElementById('postal-label').textContent  = (country === 'CA' ? region.name + ' postal code' : region.name + ' ZIP code');
+  document.getElementById('inp-postal').placeholder    = region.postalHint;
+  document.getElementById('nav-province-tag').textContent = region.name + ' · 2026';
+  document.getElementById('result-count').textContent  = '6 insurers · ' + region.name;
+  document.getElementById('strip-province').textContent = region.name;
+  showRegionBanner(country, code);
+}
+
+function showRegionBanner(country, code) {
+  const region  = getRegionData(country, code);
+  if (!region) return;
+  const zoneEl  = document.getElementById('zone-info');
+  const pct     = Math.round(Math.abs(region.avgAdj) * 100);
+  const baseline = country === 'CA' ? 'Ontario avg.' : 'US national avg.';
+  const dir     = region.avgAdj < 0 ? pct + '% below ' + baseline : region.avgAdj > 0 ? pct + '% above ' + baseline : 'at ' + baseline;
+  const sys     = region.system || (country === 'US' ? 'tort' : 'private');
+  const sysColor = SYSTEM_COLORS[sys] || SYSTEM_COLORS.private;
+  const sysText  = SYSTEM_TEXT[sys]   || SYSTEM_TEXT.private;
+  const sysLabel = SYSTEM_LABELS[sys] || 'Private market';
+  const flag     = country === 'CA' ? '🇨🇦' : '🇺🇸';
+  const curr     = region.currency || (country === 'CA' ? 'CAD' : 'USD');
+  zoneEl.className = 'zone-info show zone-' + (region.avgAdj <= -0.15 ? 'low' : region.avgAdj >= 0.10 ? 'high' : 'medium');
+  zoneEl.innerHTML = `${flag} <strong>${region.name}</strong> &nbsp;·&nbsp;
+    <span style="background:${sysColor};color:${sysText};font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">${sysLabel}</span>
+    &nbsp;·&nbsp; Min. liability: <strong>${region.minLiability}</strong> &nbsp;·&nbsp; Rates ${dir} &nbsp;·&nbsp; <strong>${curr}</strong>
+    <br><span style="font-size:11px;opacity:0.8;margin-top:4px;display:block">${region.note}</span>`;
+}
+
+function showProvinceBanner(code) { showRegionBanner('CA', code); }
+
+
+
+function onProvinceChange() {
+  const code = getSelectedProvince();
+  const prov = PROVINCES[code];
+  // Update postal hint
+  document.getElementById('postal-label').textContent = prov.name + ' postal code';
+  document.getElementById('inp-postal').placeholder = prov.postalHint;
+  // Update nav tag
+  document.getElementById('nav-province-tag').textContent = prov.name + ' · 2026';
+  // Update result count
+  document.getElementById('result-count').textContent = '6 insurers · ' + prov.name;
+  // Update hero strip province
+  document.getElementById('strip-province').textContent = prov.name;
+  // Show province info banner
+  showProvinceBanner(code);
+}
+
+function showProvinceBanner(code) {
+  const prov = PROVINCES[code];
+  const zoneEl = document.getElementById('zone-info');
+  const pct = Math.round(Math.abs(prov.avgAdj) * 100);
+  const dir = prov.avgAdj < 0 ? pct + '% below' : prov.avgAdj > 0 ? pct + '% above' : 'at';
+  const sysLabel = SYSTEM_LABELS[prov.system];
+  const sysColor = SYSTEM_COLORS[prov.system];
+  const sysText  = SYSTEM_TEXT[prov.system];
+  zoneEl.className = 'zone-info show zone-' + (prov.avgAdj <= -0.15 ? 'low' : prov.avgAdj >= 0.10 ? 'high' : 'medium');
+  zoneEl.innerHTML = `📍 <strong>${prov.name}</strong> &nbsp;·&nbsp;
+    <span style="background:${sysColor};color:${sysText};font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.3px">${sysLabel}</span>
+    &nbsp;·&nbsp; Min. liability: <strong>${prov.minLiability}</strong> &nbsp;·&nbsp; Rates ${dir} Ontario avg.
+    <br><span style="font-size:11px;opacity:0.8;margin-top:4px;display:block">${prov.note}</span>`;
+}
+
 function renderCards(adj, covMult, lowestBase) {
   const grid = document.getElementById('cards-grid');
   const sorted = [...INSURERS]
@@ -852,44 +1024,63 @@ function renderCards(adj, covMult, lowestBase) {
 
 function updateRates() {
   const postalRaw = document.getElementById('inp-postal').value.trim();
-  const coverage = document.getElementById('inp-coverage').value;
-  const vehicle = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
-  const vin = document.getElementById('inp-vin').value.trim().toUpperCase() || 'WDDSJ4GB8HN400526';
-  const errorEl = document.getElementById('error-msg');
-  const zoneEl = document.getElementById('zone-info');
+  const coverage  = document.getElementById('inp-coverage').value;
+  const vehicle   = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  const vin       = document.getElementById('inp-vin').value.trim().toUpperCase() || 'WDDSJ4GB8HN400526';
+  const country   = getSelectedCountry();
+  const regCode   = getSelectedProvince();
+  const region    = getRegionData(country, regCode);
+  const errorEl   = document.getElementById('error-msg');
+  const zoneEl    = document.getElementById('zone-info');
 
   const clean = postalRaw.replace(/\s/g,'').toUpperCase();
-  if (clean.length < 3 || !/^[A-Z]\d[A-Z]/i.test(clean)) {
-    errorEl.classList.add('show');
-    return;
+  const validCA = /^[A-Z]\d[A-Z]/i.test(clean) && clean.length >= 3;
+  const validUS = /^\d{5}/.test(postalRaw.trim());
+
+  if (country === 'CA' && !validCA) {
+    errorEl.textContent = '⚠ Please enter a valid Canadian postal code (e.g. N2G 1A1).';
+    errorEl.classList.add('show'); return;
+  }
+  if (country === 'US' && !validUS) {
+    errorEl.textContent = '⚠ Please enter a valid US ZIP code (e.g. 10001).';
+    errorEl.classList.add('show'); return;
   }
   errorEl.classList.remove('show');
 
-  const zone = lookupZone(postalRaw);
-  const adj = zone ? zone.adj : 0;
-  const covMult = COVERAGE_MULT[coverage];
-  const fsa = clean.slice(0,3);
+  let totalAdj = region ? region.avgAdj : 0;
 
-  // Update zone info
-  zoneEl.className = 'zone-info show zone-' + (zone ? (zone.label==='Low risk'?'low':zone.label==='High risk'?'high':'medium') : 'medium');
-  if (zone) {
-    const pct = Math.round(Math.abs(adj)*100);
-    const dir = adj < 0 ? `${pct}% below` : adj > 0 ? `${pct}% above` : 'at';
-    zoneEl.innerHTML = `📍 <strong>${zone.city} (${fsa})</strong> — ${zone.label} zone. Rates ${dir} provincial average.`;
+  if (country === 'CA' && regCode === 'ON') {
+    const fsa  = clean.slice(0,3);
+    const zone = lookupZone(postalRaw);
+    if (zone) {
+      totalAdj = zone.adj;
+      const pct = Math.round(Math.abs(zone.adj)*100);
+      const dir = zone.adj < 0 ? pct+'% below' : zone.adj > 0 ? pct+'% above' : 'at';
+      zoneEl.className = 'zone-info show zone-' + (zone.label==='Low risk'?'low':zone.label==='High risk'?'high':'medium');
+      zoneEl.innerHTML = '📍 <strong>' + zone.city + ' (' + fsa + ')</strong> — ' + zone.label + ' zone. Rates ' + dir + ' Ontario avg.';
+    } else {
+      showRegionBanner(country, regCode);
+    }
+    document.getElementById('strip-zone').textContent = '📍 ' + fsa + ' — ' + (zone ? zone.label : 'Ontario');
   } else {
-    zoneEl.innerHTML = `📍 <strong>${fsa}</strong> — Zone not found. Showing provincial average rates.`;
+    showRegionBanner(country, regCode);
+    document.getElementById('strip-zone').textContent = region ? '📍 ' + region.name : '📍 —';
   }
 
-  // Update hero strip
-  document.getElementById('strip-vehicle').textContent = vehicle;
-  document.getElementById('strip-vin').textContent = vin;
+  const covMult = COVERAGE_MULT[coverage];
+  document.getElementById('strip-vehicle').textContent  = vehicle;
+  document.getElementById('strip-vin').textContent      = vin;
   document.getElementById('strip-coverage').textContent = COVERAGE_LABELS[coverage];
-  document.getElementById('strip-zone').textContent = `📍 ${fsa} — ${zone ? zone.label : 'Ontario'}`;
+  document.getElementById('strip-province').textContent = region ? region.name : regCode;
+  document.getElementById('nav-province-tag').textContent = (region ? region.name : regCode) + ' · 2026';
+  document.getElementById('result-count').textContent   = '6 insurers · ' + (region ? region.name : regCode);
 
-  renderCards(adj, covMult);
+  renderCards(totalAdj, covMult);
 }
 
-// Initial render
+// Initial render — populate CA provinces
+document.getElementById('inp-province').innerHTML = CA_OPTIONS;
+onProvinceChange();
 renderCards(0, 1.0);
 </script>
 
