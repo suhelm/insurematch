@@ -665,16 +665,44 @@
       </div>
       <div class="field-group">
         <label>Country</label>
-        <select id="inp-country" onchange="onCountryChange()" style="width:140px">
-          <option value="CA" selected>🇨🇦 Canada</option>
-          <option value="US">🇺🇸 United States</option>
+        <select id="inp-country" onchange="onCountryChange()" style="width:150px">
+          <option value="CA" selected>&#x1F1E8;&#x1F1E6; Canada</option>
+          <option value="US">&#x1F1FA;&#x1F1F8; United States</option>
         </select>
       </div>
       <div class="field-group">
         <label id="region-label">Province / Territory</label>
-        <select id="inp-province" onchange="onProvinceChange()" style="width:210px">
+        <select id="inp-province" onchange="onProvinceChange()" style="width:210px"></select>
+      </div>
+      <div class="field-group">
+        <label>Coverage level</label>
+        <select id="inp-coverage">
+          <option value="min" selected>Minimum Liability</option>
+          <option value="std">Standard Full Coverage</option>
+          <option value="prem">Premium Full Coverage</option>
         </select>
       </div>
+      <div class="field-group">
+        <label id="postal-label">Ontario postal code</label>
+        <input class="postal" id="inp-postal" type="text" maxlength="10" value="N2G 1A1" placeholder="N2G 1A1">
+      </div>
+      <button class="update-btn" onclick="updateRates()">Update rates &#x2192;</button>
+    </div>
+    <div class="lookup-actions">
+      <button class="action-btn vehicle-btn" onclick="openVehicleModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Know Your Vehicle
+      </button>
+      <button class="action-btn resale-btn" onclick="openResaleModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        Resale Value
+      </button>
+    </div>
+    <div class="zone-info zone-medium show" id="zone-info">
+      &#x1F4CD; <strong>Kitchener-Waterloo (N2G)</strong> &mdash; Medium risk zone. Rates at provincial average.
+    </div>
+    <div class="error-msg" id="error-msg">&#x26A0; Please enter a valid Canadian postal code (e.g. N2G 1A1).</div>
+  </div>
 
   <!-- RESULTS -->
   <div class="section-header">
@@ -921,36 +949,9 @@ function showProvinceBanner(code) { showRegionBanner('CA', code); }
 
 
 
-function onProvinceChange() {
-  const code = getSelectedProvince();
-  const prov = PROVINCES[code];
-  // Update postal hint
-  document.getElementById('postal-label').textContent = prov.name + ' postal code';
-  document.getElementById('inp-postal').placeholder = prov.postalHint;
-  // Update nav tag
-  document.getElementById('nav-province-tag').textContent = prov.name + ' · 2026';
-  // Update result count
-  document.getElementById('result-count').textContent = '6 insurers · ' + prov.name;
-  // Update hero strip province
-  document.getElementById('strip-province').textContent = prov.name;
-  // Show province info banner
-  showProvinceBanner(code);
-}
 
-function showProvinceBanner(code) {
-  const prov = PROVINCES[code];
-  const zoneEl = document.getElementById('zone-info');
-  const pct = Math.round(Math.abs(prov.avgAdj) * 100);
-  const dir = prov.avgAdj < 0 ? pct + '% below' : prov.avgAdj > 0 ? pct + '% above' : 'at';
-  const sysLabel = SYSTEM_LABELS[prov.system];
-  const sysColor = SYSTEM_COLORS[prov.system];
-  const sysText  = SYSTEM_TEXT[prov.system];
-  zoneEl.className = 'zone-info show zone-' + (prov.avgAdj <= -0.15 ? 'low' : prov.avgAdj >= 0.10 ? 'high' : 'medium');
-  zoneEl.innerHTML = `📍 <strong>${prov.name}</strong> &nbsp;·&nbsp;
-    <span style="background:${sysColor};color:${sysText};font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.3px">${sysLabel}</span>
-    &nbsp;·&nbsp; Min. liability: <strong>${prov.minLiability}</strong> &nbsp;·&nbsp; Rates ${dir} Ontario avg.
-    <br><span style="font-size:11px;opacity:0.8;margin-top:4px;display:block">${prov.note}</span>`;
-}
+
+
 
 function renderCards(adj, covMult, lowestBase) {
   const grid = document.getElementById('cards-grid');
