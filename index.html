@@ -726,7 +726,7 @@
 </main>
 
 <footer>
-  <p>InsureMatch — Ontario Auto Insurance Comparison Tool · 2026</p>
+  <p>InsureMatch — Canada &amp; USA Auto Insurance Comparison · 2026</p>
   <p>Estimates based on published rate data. Actual premiums depend on driving history, age, and insurer underwriting. Always confirm with a licensed broker.</p>
   <p style="margin-top:8px">
     Compare live quotes: <a href="https://ratehub.ca" target="_blank">RateHub.ca</a> ·
@@ -736,14 +736,29 @@
 </footer>
 
 <script>
-const INSURERS = [
-  { name:"Sonnet Insurance", icon:"💻", sub:"Direct online — owned by Economical Insurance", stars:4.1, baseMo:155, url:"https://www.sonnet.ca", urlLabel:"sonnet.ca", pros:["100% online — instant quotes","Competitive luxury vehicle rates","Fast digital policy management","No broker or agent fees"], cons:["No in-person agent support","Fewer endorsement options","Claims process fully digital only"] },
-  { name:"Belairdirect", icon:"📱", sub:"Direct insurer — backed by Intact Financial (A+)", stars:4.2, baseMo:165, url:"https://www.belairdirect.com", urlLabel:"belairdirect.com", pros:["First North American online insurer (1997)","Strong app — claim tracking & roadside","Usage-based discount up to 25%","Solid Intact Financial backing"], cons:["Limited agent interaction","Luxury vehicle surcharges apply","Some complaints on claim delays"] },
-  { name:"TD Insurance", icon:"🏦", sub:"Direct — group discounts for alumni & professionals", stars:4.0, baseMo:175, url:"https://www.td.com/ca/en/personal-banking/products/insurance/auto-insurance", urlLabel:"td.com", pros:["TD MyAdvantage app rewards safe driving","Strong group and alumni discounts","Good digital policy tools","Widely available across Ontario"], cons:["Best rates require group program access","Pricier for luxury without group access","Mixed claims satisfaction reviews"] },
-  { name:"CAA Insurance", icon:"⭐", sub:"Best overall rated in Ontario — Rates.ca 2025", stars:4.6, baseMo:185, url:"https://www.caasco.com/insurance/auto", urlLabel:"caasco.com", pros:["#1 overall insurer in Ontario 2025","Excellent trustworthiness & transparency","MyPace usage-based program","Top-rated app and policy documents"], cons:["CAA membership required for best rates","Slightly higher premium for luxury class","Fewer fully online self-serve options"] },
-  { name:"Intact Insurance", icon:"🛡", sub:"Canada's largest P&C insurer — AM Best A+ rating", stars:4.3, baseMo:195, url:"https://www.intactinsurance.com", urlLabel:"intactinsurance.com", pros:["Specialist in luxury & specialty vehicles","myDrive app earns safe-driver discounts","Extensive Rely Network repair shops","Handles high-risk and standard drivers alike"], cons:["Higher base premiums for luxury class","Requires a broker to access quotes","Some repair network delay complaints"] },
-  { name:"Aviva Canada", icon:"🏠", sub:"Strong bundling & safety feature discounts", stars:4.1, baseMo:200, url:"https://www.aviva.ca", urlLabel:"aviva.ca", pros:["Discount for advanced safety features","Disappearing deductible program","Strong accident forgiveness options","24/7 phone claims support"], cons:["No dedicated mobile app","Higher premiums than digital-first rivals","Broker required to access quotes"] }
+/* ── CANADA INSURERS ── */
+const CA_INSURERS = [
+  { name:"Sonnet Insurance",  icon:"💻", sub:"Direct online — owned by Economical Insurance",       stars:4.1, baseMo:155, url:"https://www.sonnet.ca",                                                          urlLabel:"sonnet.ca",          pros:["100% online instant quotes","Competitive luxury vehicle rates","Fast digital policy management","No broker or agent fees"],        cons:["No in-person agent support","Fewer endorsement options","Claims process fully digital only"] },
+  { name:"Belairdirect",      icon:"📱", sub:"Direct insurer — backed by Intact Financial (A+)",     stars:4.2, baseMo:165, url:"https://www.belairdirect.com",                                                    urlLabel:"belairdirect.com",   pros:["First North American online insurer (1997)","Strong app with claim tracking & roadside","Usage-based discount up to 25%","Intact A+ financial backing"], cons:["Limited agent interaction","Luxury vehicle surcharges apply","Some claim delay complaints"] },
+  { name:"TD Insurance",      icon:"🏦", sub:"Direct — group discounts for alumni & professionals",  stars:4.0, baseMo:175, url:"https://www.td.com/ca/en/personal-banking/products/insurance/auto-insurance",  urlLabel:"td.com",             pros:["MyAdvantage app rewards safe driving","Strong alumni & group discounts","Good digital policy tools","Widely available across Ontario"],             cons:["Best rates require group access","Pricier for luxury without group","Mixed claims satisfaction"] },
+  { name:"CAA Insurance",     icon:"⭐", sub:"Best overall rated in Ontario — Rates.ca 2025",        stars:4.6, baseMo:185, url:"https://www.caasco.com/insurance/auto",                                          urlLabel:"caasco.com",         pros:["#1 rated Ontario insurer 2025","Excellent trustworthiness rating","MyPace usage-based program","Top-rated app and policy documents"],              cons:["CAA membership required for best rates","Slightly higher luxury premium","Fewer online self-serve options"] },
+  { name:"Intact Insurance",  icon:"🛡", sub:"Canada's largest P&C insurer — AM Best A+ rating",    stars:4.3, baseMo:195, url:"https://www.intactinsurance.com",                                                urlLabel:"intactinsurance.com",pros:["Specialist in luxury & specialty vehicles","myDrive safe-driving discounts","Extensive Rely Network repair shops","Handles high-risk drivers too"],  cons:["Higher base luxury premiums","Broker required for quotes","Some repair delay complaints"] },
+  { name:"Aviva Canada",      icon:"🏠", sub:"Strong bundling & safety feature discounts",           stars:4.1, baseMo:200, url:"https://www.aviva.ca",                                                            urlLabel:"aviva.ca",           pros:["Safety feature discounts (luxury qualifies)","Disappearing deductible program","Strong accident forgiveness","24/7 phone claims support"],         cons:["No dedicated mobile app","Higher than digital-first rivals","Broker required for quotes"] }
 ];
+
+/* ── USA INSURERS ── */
+const US_INSURERS = [
+  { name:"State Farm",         icon:"🏡", sub:"Largest US auto insurer — local agent network",          stars:4.4, baseMo:142, url:"https://www.statefarm.com/insurance/auto",         urlLabel:"statefarm.com",      pros:["Largest US insurer — 19,000+ agents","Steer Clear program rewards young safe drivers","Strong Drive Safe & Save telematics discount","Excellent financial strength (A++)"],          cons:["Rates not always cheapest","No online-only discount","Limited customization vs competitors"] },
+  { name:"GEICO",              icon:"🦎", sub:"2nd largest US insurer — competitive direct rates",      stars:4.2, baseMo:128, url:"https://www.geico.com",                             urlLabel:"geico.com",          pros:["Among lowest base rates in the US","DriveEasy telematics up to 25% off","Strong mobile app and digital tools","Military & federal employee discounts"],                              cons:["Limited local agent availability","Claims service varies by region","No gap insurance offered"] },
+  { name:"Progressive",        icon:"🔵", sub:"Snapshot telematics pioneer — strong for high-risk",    stars:4.1, baseMo:138, url:"https://www.progressive.com",                       urlLabel:"progressive.com",    pros:["Snapshot telematics can save up to 30%","Name Your Price tool for budget shoppers","Good high-risk driver acceptance","Bundling discount with home insurance"],                      cons:["Rates rise significantly after first claim","Customer service below industry average","Snapshot can increase rates for poor drivers"] },
+  { name:"Allstate",           icon:"🤝", sub:"Full-service insurer — Drivewise rewards safe drivers", stars:4.0, baseMo:158, url:"https://www.allstate.com",                           urlLabel:"allstate.com",       pros:["Drivewise telematics pays cash back","Strong local agent network nationwide","New car replacement & accident forgiveness","Good bundling discounts"],                              cons:["Higher base premiums than GEICO/Progressive","Claims satisfaction below State Farm","Fewer discounts than competitors"] },
+  { name:"USAA",               icon:"🎖", sub:"Military members & families — consistently top-rated",  stars:4.8, baseMo:118, url:"https://www.usaa.com/inet/wc/insurance-auto",        urlLabel:"usaa.com",           pros:["Highest customer satisfaction in the US","SafePilot telematics up to 30% off","Exclusive military perks & deployment discounts","Excellent claims handling"],                         cons:["Eligibility limited to military & families","No physical branch locations","Limited availability for some coverages"] },
+  { name:"Liberty Mutual",     icon:"🗽", sub:"Customizable coverage — RightTrack telematics",         stars:3.9, baseMo:168, url:"https://www.libertymutual.com",                     urlLabel:"libertymutual.com",  pros:["RightTrack telematics up to 30% savings","New car replacement available","Accident forgiveness after 5 years","Teachers & homeowners discounts"],                                    cons:["Higher base premiums than peers","Mixed claims satisfaction scores","Rates vary widely by state"] }
+];
+
+function getInsurers() {
+  return getSelectedCountry() === 'US' ? US_INSURERS : CA_INSURERS;
+}
 
 const COVERAGE_MULT = { min: 1.0, std: 1.55, prem: 1.95 };
 const COVERAGE_LABELS = { min:"Minimum Liability", std:"Standard Full Coverage", prem:"Premium Full Coverage" };
@@ -902,12 +917,20 @@ function onCountryChange() {
     sel.innerHTML = CA_OPTIONS;
     sel.value = 'ON';
     document.getElementById('region-label').textContent = 'Province / Territory';
+    document.getElementById('postal-label').textContent = 'Ontario postal code';
+    document.getElementById('inp-postal').placeholder = 'e.g. N2G 1A1';
+    document.getElementById('inp-postal').value = '';
   } else {
     sel.innerHTML = US_OPTIONS;
     sel.value = 'TX';
     document.getElementById('region-label').textContent = 'State';
+    document.getElementById('postal-label').textContent = 'Texas ZIP code';
+    document.getElementById('inp-postal').placeholder = 'e.g. 78701';
+    document.getElementById('inp-postal').value = '';
   }
   onProvinceChange();
+  renderCards(getRegionData(country, sel.value) ? getRegionData(country, sel.value).avgAdj : 0,
+              document.getElementById('inp-coverage') ? (window.COVERAGE_MULT || {min:1,std:1.55,prem:1.95})[document.getElementById('inp-coverage').value] || 1 : 1);
 }
 
 
@@ -955,7 +978,7 @@ function showProvinceBanner(code) { showRegionBanner('CA', code); }
 
 function renderCards(adj, covMult, lowestBase) {
   const grid = document.getElementById('cards-grid');
-  const sorted = [...INSURERS]
+  const sorted = [...getInsurers()]
     .map(ins => ({...ins, finalMo: Math.round(ins.baseMo * (1+adj) * covMult)}))
     .sort((a,b) => a.finalMo - b.finalMo);
 
@@ -985,9 +1008,9 @@ function renderCards(adj, covMult, lowestBase) {
         </div>
         <div class="price-col">
           <div class="price-label">estimated</div>
-          <div class="price-mo">$${ins.finalMo}</div>
+          <div class="price-mo">${getSelectedCountry()==="US"?"USD":"CAD"} $${ins.finalMo}</div>
           <div class="price-label">/month</div>
-          <div class="price-yr">$${annual.toLocaleString()} / year</div>
+          <div class="price-yr">$${annual.toLocaleString()} ${getSelectedCountry()==="US"?"USD":"CAD"} / year</div>
         </div>
       </div>
       <hr class="divider">
@@ -1108,20 +1131,41 @@ renderCards(0, 1.0);
 </div>
 
 <script>
-const AGENTS = [
-  { name:"Sarah Patel", city:"Kitchener, ON", phone:"519-555-0182", specialties:["Luxury vehicles","Bundling deals"], insurer:"Sonnet Insurance",     color:"#1a5c3a", initials:"SP" },
-  { name:"James Okafor", city:"Waterloo, ON", phone:"519-555-0241", specialties:["First-time buyers","High-risk"], insurer:"Sonnet Insurance",         color:"#2d6a8c", initials:"JO" },
-  { name:"Linda Marchetti", city:"Cambridge, ON", phone:"519-555-0378", specialties:["Multi-vehicle","Home & auto"], insurer:"Belairdirect",            color:"#7a3a00", initials:"LM" },
-  { name:"Ryan Cho", city:"Kitchener, ON", phone:"519-555-0194", specialties:["Telematics savings","Young drivers"], insurer:"Belairdirect",            color:"#5c3a6e", initials:"RC" },
-  { name:"Priya Sharma", city:"Guelph, ON", phone:"519-555-0456", specialties:["Luxury & specialty","Accident forgiveness"], insurer:"TD Insurance",   color:"#1a4f7a", initials:"PS" },
-  { name:"David Kowalski", city:"Waterloo, ON", phone:"519-555-0317", specialties:["Alumni discounts","Group plans"], insurer:"TD Insurance",           color:"#4a5c1a", initials:"DK" },
-  { name:"Anita Rousseau", city:"Kitchener, ON", phone:"519-555-0523", specialties:["CAA members","Usage-based"], insurer:"CAA Insurance",              color:"#7a1a2e", initials:"AR" },
-  { name:"Marcus Williams", city:"Brantford, ON", phone:"519-555-0288", specialties:["Roadside add-ons","Multi-policy"], insurer:"CAA Insurance",       color:"#1a5c4a", initials:"MW" },
-  { name:"Fatima Al-Hassan", city:"Kitchener, ON", phone:"519-555-0614", specialties:["Luxury vehicles","Commercial"], insurer:"Intact Insurance",      color:"#5c1a1a", initials:"FA" },
-  { name:"Tom Bergstrom", city:"Waterloo, ON", phone:"519-555-0392", specialties:["Claims support","High-value assets"], insurer:"Intact Insurance",    color:"#1a3a5c", initials:"TB" },
-  { name:"Grace Nakamura", city:"Cambridge, ON", phone:"519-555-0471", specialties:["Safety discounts","New Canadians"], insurer:"Aviva Canada",        color:"#5c4a1a", initials:"GN" },
-  { name:"Eric Fontaine", city:"Guelph, ON", phone:"519-555-0539", specialties:["Home & auto bundle","Accident forgiveness"], insurer:"Aviva Canada",   color:"#2a1a5c", initials:"EF" },
+/* ── CANADA AGENTS ── */
+const CA_AGENTS = [
+  { name:"Sarah Patel",       city:"Kitchener, ON",  phone:"519-555-0182", specialties:["Luxury vehicles","Bundling deals"],          insurer:"Sonnet Insurance", color:"#1a5c3a", initials:"SP" },
+  { name:"James Okafor",      city:"Waterloo, ON",   phone:"519-555-0241", specialties:["First-time buyers","High-risk"],              insurer:"Sonnet Insurance", color:"#2d6a8c", initials:"JO" },
+  { name:"Linda Marchetti",   city:"Cambridge, ON",  phone:"519-555-0378", specialties:["Multi-vehicle","Home & auto"],                insurer:"Belairdirect",     color:"#7a3a00", initials:"LM" },
+  { name:"Ryan Cho",          city:"Kitchener, ON",  phone:"519-555-0194", specialties:["Telematics savings","Young drivers"],         insurer:"Belairdirect",     color:"#5c3a6e", initials:"RC" },
+  { name:"Priya Sharma",      city:"Guelph, ON",     phone:"519-555-0456", specialties:["Luxury & specialty","Accident forgiveness"],  insurer:"TD Insurance",     color:"#1a4f7a", initials:"PS" },
+  { name:"David Kowalski",    city:"Waterloo, ON",   phone:"519-555-0317", specialties:["Alumni discounts","Group plans"],             insurer:"TD Insurance",     color:"#4a5c1a", initials:"DK" },
+  { name:"Anita Rousseau",    city:"Kitchener, ON",  phone:"519-555-0523", specialties:["CAA members","Usage-based"],                  insurer:"CAA Insurance",    color:"#7a1a2e", initials:"AR" },
+  { name:"Marcus Williams",   city:"Brantford, ON",  phone:"519-555-0288", specialties:["Roadside add-ons","Multi-policy"],            insurer:"CAA Insurance",    color:"#1a5c4a", initials:"MW" },
+  { name:"Fatima Al-Hassan",  city:"Kitchener, ON",  phone:"519-555-0614", specialties:["Luxury vehicles","Commercial"],               insurer:"Intact Insurance",  color:"#5c1a1a", initials:"FA" },
+  { name:"Tom Bergstrom",     city:"Waterloo, ON",   phone:"519-555-0392", specialties:["Claims support","High-value assets"],         insurer:"Intact Insurance",  color:"#1a3a5c", initials:"TB" },
+  { name:"Grace Nakamura",    city:"Cambridge, ON",  phone:"519-555-0471", specialties:["Safety discounts","New Canadians"],           insurer:"Aviva Canada",     color:"#5c4a1a", initials:"GN" },
+  { name:"Eric Fontaine",     city:"Guelph, ON",     phone:"519-555-0539", specialties:["Home & auto bundle","Accident forgiveness"],  insurer:"Aviva Canada",     color:"#2a1a5c", initials:"EF" },
 ];
+
+/* ── USA AGENTS ── */
+const US_AGENTS = [
+  { name:"Michael Torres",    city:"Houston, TX",    phone:"713-555-0182", specialties:["Luxury vehicles","Full coverage"],            insurer:"State Farm",        color:"#1a4f2a", initials:"MT" },
+  { name:"Ashley Johnson",    city:"Dallas, TX",     phone:"214-555-0241", specialties:["First-time buyers","Bundling"],               insurer:"State Farm",        color:"#2d5a8c", initials:"AJ" },
+  { name:"Kevin Park",        city:"Chicago, IL",    phone:"312-555-0194", specialties:["Telematics savings","High-risk"],             insurer:"GEICO",             color:"#1a6a2a", initials:"KP" },
+  { name:"Sandra Lee",        city:"Los Angeles, CA",phone:"213-555-0378", specialties:["SR-22","Young drivers"],                      insurer:"GEICO",             color:"#5c3a00", initials:"SL" },
+  { name:"Robert Nguyen",     city:"Phoenix, AZ",    phone:"602-555-0456", specialties:["Snapshot telematics","Low-cost plans"],       insurer:"Progressive",       color:"#0a3a6a", initials:"RN" },
+  { name:"Maria Gonzalez",    city:"Miami, FL",      phone:"305-555-0317", specialties:["No-fault coverage","Multi-vehicle"],          insurer:"Progressive",       color:"#4a2a6a", initials:"MG" },
+  { name:"James Carter",      city:"Atlanta, GA",    phone:"404-555-0523", specialties:["Drivewise telematics","Home bundle"],         insurer:"Allstate",          color:"#6a1a1a", initials:"JC" },
+  { name:"Linda Kim",         city:"Seattle, WA",    phone:"206-555-0288", specialties:["Accident forgiveness","New car replacement"], insurer:"Allstate",          color:"#1a5a4a", initials:"LK" },
+  { name:"David Walsh",       city:"San Antonio, TX",phone:"210-555-0614", specialties:["Military families","Deployment coverage"],    insurer:"USAA",              color:"#3a1a5c", initials:"DW" },
+  { name:"Jennifer Moore",    city:"San Diego, CA",  phone:"619-555-0392", specialties:["SafePilot telematics","VA benefits"],        insurer:"USAA",              color:"#1a3a5c", initials:"JM" },
+  { name:"Christopher Evans", city:"Denver, CO",     phone:"303-555-0471", specialties:["RightTrack savings","Custom coverage"],       insurer:"Liberty Mutual",    color:"#4a3a1a", initials:"CE" },
+  { name:"Patricia Brown",    city:"New York, NY",   phone:"212-555-0539", specialties:["High-value vehicles","Umbrella policy"],      insurer:"Liberty Mutual",    color:"#2a1a4c", initials:"PB" },
+];
+
+function getAgents() {
+  return getSelectedCountry() === 'US' ? US_AGENTS : CA_AGENTS;
+}
 
 let currentInsurer = null;
 
@@ -1151,7 +1195,7 @@ function renderAgents(agents) {
 
 function filterAgents() {
   const q = document.getElementById('agent-search').value.toLowerCase();
-  const pool = currentInsurer ? AGENTS.filter(a => a.insurer === currentInsurer) : AGENTS;
+  const pool = currentInsurer ? getAgents().filter(a => a.insurer === currentInsurer) : getAgents();
   const filtered = q ? pool.filter(a =>
     a.name.toLowerCase().includes(q) ||
     a.city.toLowerCase().includes(q) ||
@@ -1163,7 +1207,17 @@ function filterAgents() {
 
 function openAgents(insurerName) {
   currentInsurer = insurerName;
-  document.getElementById('modal-insurer-ctx').textContent = `Showing agents for ${insurerName}`;
+  const country = getSelectedCountry();
+  document.getElementById('modal-insurer-ctx').textContent = 'Showing ' + (country === 'US' ? 'US' : 'Canadian') + ' agents for ' + insurerName;
+  // Update registry note based on country
+  const noteEl = document.getElementById('agents-registry-note');
+  if (noteEl) {
+    if (country === 'US') {
+      noteEl.innerHTML = 'These are sample licensed agent profiles. For the full US registry, visit <a href="https://www.naic.org/consumer_licensing.htm" target="_blank">NAIC Producer Licensing</a> or your state&#39;s Department of Insurance.';
+    } else {
+      noteEl.innerHTML = 'These are sample licensed broker profiles. For the full registry, visit the <a href="https://www.fsrao.ca/consumers/auto-insurance/finding-agent-or-broker" target="_blank">FSRAO agent directory</a> or <a href="https://www.ribo.com/find-a-broker/" target="_blank">RIBO broker search</a>.';
+    }
+  }
   document.getElementById('agent-search').value = '';
   filterAgents();
   document.getElementById('agents-modal').classList.add('open');
