@@ -1,3 +1,21 @@
+To make the Claude features work on your deployed site, you have two options:
+Option 1 — Get your own Anthropic API key (simplest)
+
+Go to 👉 console.anthropic.com
+Create an account → API Keys → Create Key
+Add one line to index.html in every fetch call to the Anthropic API:
+
+headers: {
+  'Content-Type': 'application/json',
+  'x-api-key': 'sk-ant-YOUR-KEY-HERE',      // add this
+  'anthropic-version': '2023-06-01',          // add this
+  'anthropic-dangerous-direct-browser-access': 'true'  // add this
+}
+
+
+Warning: Putting your API key directly in a public GitHub file means anyone can see it and use it — racking up charges on your account. Only do this for a private or password-protected site.
+
+
 # InsureMatch 🚗
 
 **Auto Insurance Comparison Tool — Canada & USA**
@@ -5,6 +23,8 @@
 A fully self-contained single-file web application for comparing auto insurance rates across all Canadian provinces/territories and all 50 US states, with live vehicle data powered by the NHTSA API and AI-driven valuations via Claude.
 
 🔗 **Live site:** [suhelm.github.io/insurematch](https://suhelm.github.io/insurematch)
+
+
 
 ---
 
