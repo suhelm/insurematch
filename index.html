@@ -411,6 +411,101 @@
     .agent-contact { display: none; }
   }
 
+  /* ─── MECHANIC BUTTON ─── */
+  .action-btn.mechanic-btn {
+    color: #5c1a6e; background: #f3e8fb;
+    border: 1px solid rgba(92,26,110,0.25);
+  }
+  .action-btn.mechanic-btn:hover { background: #e8d0f5; border-color: rgba(92,26,110,0.4); }
+
+  /* ─── MECHANIC MODAL ─── */
+  .mechanic-search-bar {
+    display: flex; gap: 8px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;
+  }
+  .mechanic-search-bar input {
+    flex: 1; min-width: 160px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    padding: 9px 12px; border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); background: var(--paper-warm);
+    color: var(--ink); outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .mechanic-search-bar input:focus {
+    border-color: #5c1a6e; box-shadow: 0 0 0 3px rgba(92,26,110,0.10);
+  }
+  .mechanic-search-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #fff; background: #5c1a6e; border: none;
+    border-radius: var(--radius-sm); padding: 9px 18px; cursor: pointer;
+    transition: background 0.15s; white-space: nowrap;
+  }
+  .mechanic-search-btn:hover { background: #7a2490; }
+  .mechanic-search-btn:disabled { background: #b89cc8; cursor: not-allowed; }
+
+  .mechanic-context-bar {
+    background: #f3e8fb; border: 1px solid rgba(92,26,110,0.18);
+    border-radius: var(--radius-sm); padding: 8px 14px;
+    font-size: 12px; color: #5c1a6e; margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .mechanic-context-bar .ctx-tag {
+    background: rgba(92,26,110,0.12); border-radius: 20px;
+    padding: 2px 10px; font-weight: 600; font-size: 11px;
+  }
+
+  .mechanic-list { display: flex; flex-direction: column; gap: 12px; }
+  .mechanic-card {
+    display: flex; gap: 14px; align-items: flex-start;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 13px 15px; background: var(--paper-warm);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .mechanic-card:hover { border-color: #5c1a6e; background: #f9f2fc; }
+  .mechanic-avatar {
+    width: 46px; height: 46px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; background: #f3e8fb; border: 1px solid rgba(92,26,110,0.15);
+  }
+  .mechanic-info { flex: 1; min-width: 0; }
+  .mechanic-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .mechanic-address { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .mechanic-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+  .mechanic-tag {
+    font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 20px; border: 1px solid var(--border);
+    background: var(--paper-card); color: var(--ink-muted);
+  }
+  .mechanic-tag.spec {
+    background: #f3e8fb; border-color: rgba(92,26,110,0.2);
+    color: #5c1a6e;
+  }
+  .mechanic-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+  .mechanic-rating { font-size: 13px; color: #b8860b; }
+  .mechanic-rating span { font-size: 11px; color: var(--ink-muted); font-family: 'DM Mono', monospace; }
+  .mechanic-dist { font-size: 11px; color: var(--ink-muted); font-family: 'DM Mono', monospace; }
+  .mechanic-call {
+    font-size: 11px; font-weight: 600; color: #5c1a6e;
+    border: 1px solid rgba(92,26,110,0.3); border-radius: 6px;
+    padding: 4px 10px; background: transparent; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; text-decoration: none; white-space: nowrap;
+  }
+  .mechanic-call:hover { background: #f3e8fb; }
+
+  .mechanic-loading {
+    text-align: center; padding: 2rem 1rem;
+    font-size: 13px; color: var(--ink-muted);
+  }
+  .mechanic-spinner {
+    width: 28px; height: 28px; margin: 0 auto 12px;
+    border: 3px solid #f3e8fb; border-top-color: #5c1a6e;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .mechanic-empty {
+    text-align: center; padding: 2rem 1rem;
+    font-size: 13px; color: var(--ink-muted); line-height: 1.6;
+  }
+
   /* ─── PROVINCE BANNER ─── */
   .zone-info { line-height: 1.7; }
   .zone-info br + span { margin-top: 3px; }
@@ -696,6 +791,10 @@
       <button class="action-btn resale-btn" onclick="openResaleModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
         Resale Value
+      </button>
+      <button class="action-btn mechanic-btn" onclick="openMechanicModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        Find Mechanic
       </button>
     </div>
     <div class="zone-info zone-medium show" id="zone-info">
@@ -1236,6 +1335,41 @@ function closeAgentsOnOverlay(e) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAgents(); closeVehicleModal(); closeResaleModal(); } });
 </script>
 
+<!-- FIND MECHANIC MODAL -->
+<div class="info-modal-overlay" id="mechanic-modal" onclick="closeMechanicModalOnOverlay(event)">
+  <div class="info-modal" style="max-width:740px">
+    <div class="info-modal-header">
+      <div>
+        <h3>Find a Mechanic</h3>
+        <div class="sub" id="mechanic-modal-sub">Specialists for your vehicle near your location</div>
+      </div>
+      <button class="info-modal-close" onclick="closeMechanicModal()">&#x2715;</button>
+    </div>
+    <div class="info-modal-body">
+      <div class="mechanic-context-bar" id="mechanic-ctx-bar">
+        <span>&#x1F527;</span>
+        <span id="mechanic-ctx-vehicle">Vehicle</span>
+        <span class="ctx-tag" id="mechanic-ctx-location">Location</span>
+        <span class="ctx-tag" id="mechanic-ctx-type">Specialist type</span>
+      </div>
+      <div class="mechanic-search-bar">
+        <input type="text" id="mechanic-zip-input" placeholder="Enter ZIP / postal code to search" maxlength="10">
+        <button class="mechanic-search-btn" id="mechanic-search-btn" onclick="searchMechanics()">
+          Search Mechanics
+        </button>
+      </div>
+      <div id="mechanic-list-container">
+        <div class="mechanic-empty">
+          Enter your ZIP or postal code above and click <strong>Search Mechanics</strong> to find specialists near you.
+        </div>
+      </div>
+      <p class="modal-note" style="margin-top:1rem" id="mechanic-footer-note">
+        Results are AI-generated estimates based on vehicle type and location. Always verify contact details and certifications before booking.
+      </p>
+    </div>
+  </div>
+</div>
+
 <!-- KNOW YOUR VEHICLE MODAL -->
 <div class="info-modal-overlay" id="vehicle-modal" onclick="closeVehicleModalOnOverlay(event)">
   <div class="info-modal">
@@ -1282,97 +1416,183 @@ const VEHICLE_DB_SPEC = {
   vinDecoded:{ WMI:"WDD", VDS:"SJ4GB", VIS:"8HN400526", Plant:"Kecskemét, Hungary", "Check digit":"8 OK" }
 };
 
-function buildVehicleBody() {
-  const v = VEHICLE_DB_SPEC;
-  const vin = document.getElementById('inp-vin').value.trim().toUpperCase() || 'WDDSJ4GB8HN400526';
-  const vinWMI = vin.slice(0,3) || '---';
-  const vinVDS = vin.slice(3,8) || '---';
-  const vinCheck = vin.slice(8,9) || '-';
-  const vinModelYr = vin.slice(9,10) || '-';
-  const vinPlant = vin.slice(10,11) || '-';
-  const vinSeq = vin.slice(11,17) || '------';
-  const modelYearMap = {A:2010,B:2011,C:2012,D:2013,E:2014,F:2015,G:2016,H:2017,J:2018,K:2019,L:2020,M:2021,N:2022,P:2023,R:2024,S:2025,T:2026};
-  const decodedYear = modelYearMap[vinModelYr] ? modelYearMap[vinModelYr] + '' : 'Unknown';
-  const sr = v.safetyRatings;
-  return `
-    <div class="vin-hero">
-      <div class="vin-car-icon">&#x1F697;</div>
-      <div class="vin-hero-text">
-        <div class="car-title">${v.year} ${v.make} ${v.model}</div>
-        <div class="car-sub">${v.trim} &middot; ${v.origin}</div>
-        <div class="vin-code">VIN: ' + (document.getElementById('inp-vin').value.trim().toUpperCase() || 'WDDSJ4GB8HN400526') + '</div>
-      </div>
-    </div>
-    <div class="info-sections">
-      <div>
-        <div class="info-section-title">Engine &amp; Performance</div>
-        <div class="spec-grid">
-          <div class="spec-tile"><div class="spec-label">Engine</div><div class="spec-val">${v.engine}</div></div>
-          <div class="spec-tile"><div class="spec-label">Power</div><div class="spec-val">${v.power}</div></div>
-          <div class="spec-tile"><div class="spec-label">Torque</div><div class="spec-val">${v.torque}</div></div>
-          <div class="spec-tile"><div class="spec-label">Transmission</div><div class="spec-val">${v.transmission}</div></div>
-          <div class="spec-tile"><div class="spec-label">Fuel type</div><div class="spec-val">${v.fuelType}</div></div>
-          <div class="spec-tile"><div class="spec-label">Fuel economy</div><div class="spec-val">${v.mpgCity} city / ${v.mpgHwy} hwy MPG</div></div>
-        </div>
-      </div>
-      <div>
-        <div class="info-section-title">Dimensions &amp; Specs</div>
-        <div class="spec-grid">
-          <div class="spec-tile"><div class="spec-label">Body</div><div class="spec-val">${v.body}</div></div>
-          <div class="spec-tile"><div class="spec-label">Drivetrain</div><div class="spec-val">${v.drivetrain}</div></div>
-          <div class="spec-tile"><div class="spec-label">Curb weight</div><div class="spec-val">${v.weight}</div></div>
-          <div class="spec-tile"><div class="spec-label">Length &times; Width</div><div class="spec-val">${v.length} &times; ${v.width}</div></div>
-          <div class="spec-tile"><div class="spec-label">Wheelbase</div><div class="spec-val">${v.wheelbase}</div></div>
-          <div class="spec-tile"><div class="spec-label">Cargo space</div><div class="spec-val">${v.cargo}</div></div>
-        </div>
-      </div>
-      <div>
-        <div class="info-section-title">Safety ratings (NHTSA / IIHS est.)</div>
-        <div class="safety-bar">
-          ${Object.entries(sr).map(([k,val]) => `
-          <div class="safety-row">
-            <span class="s-label">${k}</span>
-            <div class="s-track"><div class="s-fill" style="width:${val}%;background:${val>=85?'#1a5c3a':val>=70?'#b8860b':'#8b1a1a'}"></div></div>
-            <span class="s-score">${val}%</span>
-          </div>`).join('')}
-        </div>
-      </div>
-      <div>
-        <div class="info-section-title">Active safety features</div>
-        <div class="spec-grid">
-          ${v.features.map(f => `<div class="spec-tile" style="padding:8px 12px"><div class="spec-val" style="font-size:12.5px">&#10003; ${f}</div></div>`).join('')}
-        </div>
-      </div>
-      <div>
-        <div class="info-section-title">Recalls &amp; safety campaigns</div>
-        ${v.recalls.map(r => `<div class="recall-box" style="margin-bottom:8px"><strong>&#9888; ${r.id} &mdash; ${r.date}</strong>${r.desc}<br><span style="font-size:11px;opacity:0.75">Status: ${r.status}</span></div>`).join('')}
-      </div>
-      <div>
-        <div class="info-section-title">VIN decode</div>
-        <div class="spec-grid">
-          <div class="spec-tile"><div class="spec-label">WMI (1-3)</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${vinWMI}</div></div>
-          <div class="spec-tile"><div class="spec-label">VDS (4-8)</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${vinVDS}</div></div>
-          <div class="spec-tile"><div class="spec-label">Check digit (9)</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${vinCheck}</div></div>
-          <div class="spec-tile"><div class="spec-label">Model year (10)</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${vinModelYr} — ${decodedYear}</div></div>
-          <div class="spec-tile"><div class="spec-label">Plant code (11)</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${vinPlant}</div></div>
-          <div class="spec-tile"><div class="spec-label">Sequence (12-17)</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${vinSeq}</div></div>
-        </div>
-      </div>
-      <div class="recall-box" style="background:#fdf0f0;border-color:rgba(139,26,26,0.2);color:#8b1a1a">
-        <strong>Insurance note</strong>
-        Luxury compact &mdash; elevated theft risk rating. Theft risk: Moderate-high (luxury badge). These factors contribute to elevated premiums vs. non-luxury vehicles.
-      </div>
-    </div>`;
+/* ══════════════════════════════
+   LIVE VIN + RECALL DATA (NHTSA)
+   ══════════════════════════════ */
+
+function specTile(label, val, mono) {
+  return '<div class="spec-tile"><div class="spec-label">' + label + '</div><div class="spec-val" style="' + (mono ? "font-family:'DM Mono',monospace;font-size:13px" : '') + '">' + (val || '—') + '</div></div>';
 }
 
-function openVehicleModal() {
-  const vd = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
-  const vinVal = document.getElementById('inp-vin').value.trim().toUpperCase() || 'WDDSJ4GB8HN400526';
-  document.getElementById('vm-subtitle').textContent = vd + ' · VIN ' + vinVal;
-  document.getElementById('vm-body').innerHTML = buildVehicleBody();
+async function openVehicleModal() {
+  const vin = (document.getElementById('inp-vin').value.trim().toUpperCase() || 'WDDSJ4GB8HN400526');
+  const vd  = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  document.getElementById('vm-subtitle').textContent = 'Loading live data for VIN ' + vin + '…';
+  document.getElementById('vm-body').innerHTML = '<div style="text-align:center;padding:3rem 1rem"><div class="mechanic-spinner" style="border-top-color:#1a5c3a;margin:0 auto 1rem"></div><div style="font-size:13px;color:var(--ink-muted)">Fetching NHTSA vehicle data…</div></div>';
   document.getElementById('vehicle-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  try {
+    // ── 1. NHTSA VIN Decoder ──
+    const vinResp = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/' + vin + '?format=json');
+    const vinJson = await vinResp.json();
+    const d = (vinJson.Results && vinJson.Results[0]) || {};
+
+    // ── 2. NHTSA Recalls by VIN ──
+    let recallsHtml = '';
+    try {
+      const recallResp = await fetch('https://api.nhtsa.gov/recalls/recallsByVehicle?make=' + encodeURIComponent(d.Make || '') + '&model=' + encodeURIComponent(d.Model || '') + '&modelYear=' + encodeURIComponent(d.ModelYear || ''));
+      const recallJson = await recallResp.json();
+      const recalls = recallJson.results || [];
+      if (recalls.length) {
+        recallsHtml = recalls.slice(0,5).map(r => {
+          const sev = r.Component ? r.Component : 'Unknown component';
+          return '<div class="recall-box" style="margin-bottom:8px"><strong>&#9888; NHTSA ' + (r.NHTSACampaignNumber || r.ReportReceivedDate || '') + '</strong><br>' +
+            '<strong>' + sev + '</strong><br>' +
+            '<span style="font-size:12px">' + (r.Consequence || r.Summary || '') + '</span><br>' +
+            '<span style="font-size:11px;opacity:0.75">Remedy: ' + (r.Remedy || 'See dealer') + '</span></div>';
+        }).join('');
+      } else {
+        recallsHtml = '<div class="recall-box no-recall">&#x2705; No open recalls found for this vehicle via NHTSA.</div>';
+      }
+    } catch(e) {
+      recallsHtml = '<div class="recall-box">Could not load recall data. Visit <a href="https://www.nhtsa.gov/recalls" target="_blank">nhtsa.gov/recalls</a> to check manually.</div>';
+    }
+
+    // ── 3. NHTSA Safety Ratings ──
+    let safetyHtml = '';
+    try {
+      const safetyResp = await fetch('https://api.nhtsa.gov/SafetyRatings/modelyear/' + (d.ModelYear||'2017') + '/make/' + encodeURIComponent(d.Make||'Mercedes-Benz') + '/model/' + encodeURIComponent(d.Model||'CLA'));
+      const safetyJson = await safetyResp.json();
+      const variants = safetyJson.Results || [];
+      if (variants.length) {
+        const vid = variants[0].VehicleId;
+        const ratingResp = await fetch('https://api.nhtsa.gov/SafetyRatings/VehicleId/' + vid);
+        const ratingJson = await ratingResp.json();
+        const ratings = ratingJson.Results && ratingJson.Results[0];
+        if (ratings) {
+          const cats = [
+            ['Overall', ratings.OverallRating],
+            ['Front crash', ratings.FrontCrashDriversideRating],
+            ['Side crash', ratings.SideCrashDriversideRating],
+            ['Rollover', ratings.RolloverRating],
+            ['Side pole', ratings.SidePoleRating],
+          ].filter(c => c[1] && c[1] !== 'Not Rated');
+          safetyHtml = cats.map(([label, stars]) => {
+            const numStars = parseInt(stars) || 0;
+            const pct = numStars * 20;
+            return '<div class="safety-row"><span class="s-label">' + label + '</span>' +
+              '<div class="s-track"><div class="s-fill" style="width:' + pct + '%;background:' + (pct>=80?'#1a5c3a':pct>=60?'#b8860b':'#8b1a1a') + '"></div></div>' +
+              '<span class="s-score">&#x2605;'.repeat(numStars) + ' ' + stars + '/5</span></div>';
+          }).join('');
+          if (!safetyHtml) safetyHtml = '<p style="font-size:12px;color:var(--ink-muted)">Ratings not available for this variant.</p>';
+        }
+      }
+    } catch(e) {
+      safetyHtml = '<p style="font-size:12px;color:var(--ink-muted)">NHTSA safety ratings unavailable for this vehicle. <a href="https://www.nhtsa.gov/ratings" target="_blank">Check nhtsa.gov</a></p>';
+    }
+
+    // ── 4. Build VIN decode tiles ──
+    const vinSeg = [
+      ['WMI (1–3)',      vin.slice(0,3)],
+      ['VDS (4–8)',      vin.slice(3,8)],
+      ['Check digit (9)',vin.slice(8,9)],
+      ['Model year (10)',vin.slice(9,10)],
+      ['Plant code (11)',vin.slice(10,11)],
+      ['Sequence (12–17)',vin.slice(11,17)],
+    ];
+
+    // ── 5. Render full modal ──
+    const make  = d.Make  || '—';
+    const model = d.Model || '—';
+    const year  = d.ModelYear || '—';
+    const title = [year, make, model].filter(Boolean).join(' ');
+
+    document.getElementById('vm-subtitle').textContent = title + ' · VIN ' + vin + ' · Live NHTSA data';
+
+    document.getElementById('vm-body').innerHTML = `
+      <div class="vin-hero">
+        <div class="vin-car-icon">&#x1F697;</div>
+        <div class="vin-hero-text">
+          <div class="car-title">${title}</div>
+          <div class="car-sub">${d.Trim||''} ${d.DriveType ? '· ' + d.DriveType : ''} ${d.PlantCountry ? '· Made in ' + d.PlantCountry : ''}</div>
+          <div class="vin-code">VIN: ${vin}</div>
+        </div>
+        <div style="margin-left:auto;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:6px 12px;font-size:11px;color:rgba(255,255,255,0.7);white-space:nowrap">
+          &#x1F4E1; Live · NHTSA API
+        </div>
+      </div>
+      <div class="info-sections">
+        <div>
+          <div class="info-section-title">Vehicle identity</div>
+          <div class="spec-grid">
+            ${specTile('Make', d.Make)}
+            ${specTile('Model', d.Model)}
+            ${specTile('Year', d.ModelYear)}
+            ${specTile('Trim', d.Trim || d.Series)}
+            ${specTile('Body style', d.BodyClass)}
+            ${specTile('Vehicle type', d.VehicleType)}
+          </div>
+        </div>
+        <div>
+          <div class="info-section-title">Engine &amp; Drivetrain</div>
+          <div class="spec-grid">
+            ${specTile('Engine', (d.DisplacementL ? d.DisplacementL + 'L ' : '') + (d.EngineCylinders ? d.EngineCylinders + '-cyl' : ''))}
+            ${specTile('Fuel type', d.FuelTypePrimary)}
+            ${specTile('Drive type', d.DriveType)}
+            ${specTile('Transmission', d.TransmissionStyle)}
+            ${specTile('Engine config', d.EngineConfiguration)}
+            ${specTile('Turbo', d.Turbo || 'N/A')}
+          </div>
+        </div>
+        <div>
+          <div class="info-section-title">Dimensions &amp; Capacity</div>
+          <div class="spec-grid">
+            ${specTile('Doors', d.Doors)}
+            ${specTile('Seats', d.Seats)}
+            ${specTile('GVWR', d.GVWR)}
+            ${specTile('Brake type', d.BrakeSystemType)}
+            ${specTile('Steering', d.SteeringType)}
+            ${specTile('Plant city', d.PlantCity + (d.PlantState ? ', ' + d.PlantState : '') + (d.PlantCountry ? ', ' + d.PlantCountry : ''))}
+          </div>
+        </div>
+        <div>
+          <div class="info-section-title">Safety &amp; Tech</div>
+          <div class="spec-grid">
+            ${specTile('ABS', d.AntiLockBrakingSystem_ABS)}
+            ${specTile('ESC', d.ElectronicStabilityControl_ESC)}
+            ${specTile('Traction control', d.TractionControl)}
+            ${specTile('Airbags', d.AirBagLocFront)}
+            ${specTile('Blind spot', d.BlindSpotMon)}
+            ${specTile('Lane departure', d.LaneDepartureWarning)}
+          </div>
+        </div>
+        <div>
+          <div class="info-section-title">NHTSA safety ratings &#x2022; Live</div>
+          <div class="safety-bar">${safetyHtml || '<p style="font-size:12px;color:var(--ink-muted)">Loading safety ratings…</p>'}</div>
+        </div>
+        <div>
+          <div class="info-section-title">Recalls &amp; safety campaigns &#x2022; Live NHTSA</div>
+          ${recallsHtml}
+        </div>
+        <div>
+          <div class="info-section-title">VIN decode</div>
+          <div class="spec-grid">
+            ${vinSeg.map(([l,v]) => specTile(l, v, true)).join('')}
+          </div>
+        </div>
+        <div class="recall-box" style="background:#fdf0f0;border-color:rgba(139,26,26,0.2);color:#8b1a1a">
+          <strong>&#x1F4A1; Insurance note</strong><br>
+          ${d.Make && /mercedes|bmw|audi|porsche|lexus|jaguar/i.test(d.Make) ? 'Luxury vehicle — elevated theft risk class. Expect premiums 20–35% above non-luxury equivalent.' : 'Standard vehicle class. Premiums based on model year, safety ratings, and local risk zone.'}
+          Full NHTSA data at <a href="https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json" target="_blank" style="color:inherit">vpic.nhtsa.dot.gov</a>
+        </div>
+      </div>`;
+  } catch(err) {
+    document.getElementById('vm-body').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--ink-muted)"><p>&#x26A0; Could not load NHTSA data.</p><p style="font-size:12px;margin-top:8px">' + err.message + '</p><p style="font-size:12px;margin-top:8px">Check your connection or try a different VIN.</p></div>';
+    document.getElementById('vm-subtitle').textContent = 'VIN ' + vin + ' — data unavailable';
+  }
 }
+
 function closeVehicleModal() {
   document.getElementById('vehicle-modal').classList.remove('open');
   document.body.style.overflow = '';
@@ -1381,83 +1601,187 @@ function closeVehicleModalOnOverlay(e) {
   if (e.target === document.getElementById('vehicle-modal')) closeVehicleModal();
 }
 
-function buildResaleBody() {
-  const msrp = 38000;
-  const depSchedule = [
-    { label:"New (2017)", pct:100, val:38000 },
-    { label:"1 yr",       pct:82,  val:31160 },
-    { label:"2 yr",       pct:70,  val:26600 },
-    { label:"3 yr",       pct:61,  val:23180 },
-    { label:"4 yr",       pct:54,  val:20520 },
-    { label:"5 yr",       pct:47,  val:17860 },
-    { label:"6 yr",       pct:41,  val:15580 },
-    { label:"7 yr",       pct:36,  val:13680 },
-    { label:"8 yr",       pct:32,  val:12160 },
-    { label:"9 yr (now)", pct:28,  val:10640, current:true },
-  ];
-  const cur = depSchedule[depSchedule.length-1];
-  const depPct = 100 - cur.pct;
-  const colors = ['#c8dfc8','#b0d0b0','#98c098','#80b080','#68a068','#509050','#387038','#205820','#1a5c3a','#0f3d28'];
+/* ══════════════════════════════
+   LIVE RESALE VALUATION (Claude AI)
+   ══════════════════════════════ */
 
-  return `
-    <div class="resale-hero">
-      <div class="resale-tile">
-        <div class="rt-label">Original MSRP (CAD)</div>
-        <div class="rt-val">$${msrp.toLocaleString()}</div>
-        <div class="rt-sub">Base 2017 price</div>
-      </div>
-      <div class="resale-tile highlight">
-        <div class="rt-label">Est. market value now</div>
-        <div class="rt-val">$${cur.val.toLocaleString()}</div>
-        <div class="rt-sub">Ontario private sale 2026</div>
-      </div>
-      <div class="resale-tile">
-        <div class="rt-label">Total depreciation</div>
-        <div class="rt-val">${depPct}%</div>
-        <div class="rt-sub">$${(msrp-cur.val).toLocaleString()} lost</div>
-      </div>
-    </div>
-    <div class="depreciation-chart">
-      <div class="info-section-title">Depreciation curve — 9 years</div>
-      ${depSchedule.map((d,i) => `
-      <div class="dep-row">
-        <span class="dep-year">${d.label}</span>
-        <div class="dep-track">
-          <div class="dep-fill" style="width:${d.pct}%;background:${d.current?'#1a5c3a':colors[i]}">
-            <span style="color:${d.pct>25?'#fff':'transparent'}">${d.pct}% retained</span>
-          </div>
-        </div>
-        <span class="dep-val">$${d.val.toLocaleString()}</span>
-      </div>`).join('')}
-    </div>
-    <div>
-      <div class="info-section-title">Key resale factors for your CLA 250</div>
-      <div class="factors-grid">
-        <div class="factor-item"><div class="factor-icon">&#x1F4C9;</div><div class="factor-text"><div class="f-title">Luxury depreciation</div><div class="f-desc">Mercedes-Benz CLA depreciates faster than non-luxury compacts — typically 65-72% over 5 years.</div></div></div>
-        <div class="factor-item"><div class="factor-icon">&#x1F527;</div><div class="factor-text"><div class="f-title">Maintenance history</div><div class="f-desc">Full Mercedes service records can add $800-$1,500 to private sale value.</div></div></div>
-        <div class="factor-item"><div class="factor-icon">&#x1F511;</div><div class="factor-text"><div class="f-title">4MATIC premium</div><div class="f-desc">AWD variants command $1,000-$2,000 more on the Ontario used market vs. FWD.</div></div></div>
-        <div class="factor-item"><div class="factor-icon">&#x1F3A8;</div><div class="factor-text"><div class="f-title">Colour &amp; options</div><div class="f-desc">Neutral colours hold value best. Premium package options add $1,000-$3,000 over base.</div></div></div>
-        <div class="factor-item"><div class="factor-icon">&#x1F4CD;</div><div class="factor-text"><div class="f-title">Ontario market</div><div class="f-desc">K-W region is slightly below GTA pricing. Toronto listings run 5-8% higher for same vehicle.</div></div></div>
-        <div class="factor-item"><div class="factor-icon">&#x1F4CB;</div><div class="factor-text"><div class="f-title">Recall status</div><div class="f-desc">Open Takata airbag recall may reduce buyer confidence. Completing recall work before selling is advisable.</div></div></div>
-      </div>
-    </div>
-    <div class="resale-verdict">
-      <strong>Bottom line:</strong> Your 2017 Mercedes-Benz CLA 250 has an estimated private-sale value of <strong>$9,500-$12,500 CAD</strong> in Ontario (2026), depending on mileage, condition, and options. Dealer trade-in offers typically run 15-20% lower.
-    </div>
-    <p class="modal-note" style="margin-top:1rem">
-      Compare live listings: <a href="https://www.autotrader.ca" target="_blank">AutoTrader.ca</a> &middot;
-      <a href="https://www.kijiji.ca/b-cars-trucks" target="_blank">Kijiji Autos</a> &middot;
-      <a href="https://www.cargurus.ca" target="_blank">CarGurus.ca</a>
-    </p>`;
-}
+async function openResaleModal() {
+  const vehicle  = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  const vin      = document.getElementById('inp-vin').value.trim().toUpperCase() || '';
+  const country  = getSelectedCountry();
+  const isUS     = country === 'US';
+  const regCode  = getSelectedProvince();
+  const region   = getRegionData(country, regCode);
+  const regName  = region ? region.name : (isUS ? 'United States' : 'Ontario');
+  const curr     = isUS ? 'USD' : 'CAD';
+  const currSym  = curr;
+  const flag     = isUS ? '&#x1F1FA;&#x1F1F8;' : '&#x1F1E8;&#x1F1E6;';
+  const mktDesc  = regName + ' · ' + curr;
 
-function openResaleModal() {
-  const vd = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
-  document.getElementById('rv-subtitle').textContent = vd + ' · Ontario market 2026';
-  document.getElementById('rv-body').innerHTML = buildResaleBody();
+  document.getElementById('rv-subtitle').textContent = vehicle + ' · ' + mktDesc + ' · 2026';
+  document.getElementById('rv-body').innerHTML =
+    '<div style="text-align:center;padding:3rem 1rem">' +
+    '<div class="mechanic-spinner" style="border-top-color:#1a5c3a;margin:0 auto 1rem"></div>' +
+    '<div style="font-size:13px;color:var(--ink-muted)">Fetching live market valuation for ' + vehicle + '…</div>' +
+    '</div>';
   document.getElementById('resale-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  const prompt =
+    'You are a vehicle valuation API. Return ONLY valid JSON, no markdown, no extra text.\n\n' +
+    'Provide a detailed resale valuation for:\n' +
+    'Vehicle: ' + vehicle + '\n' +
+    (vin ? 'VIN: ' + vin + '\n' : '') +
+    'Market: ' + regName + ' (' + (isUS ? 'United States' : 'Canada') + ')\n' +
+    'Currency: ' + curr + '\n' +
+    'Current year: 2026\n\n' +
+    'Return this exact JSON structure:\n' +
+    '{\n' +
+    '  "year": 2017,\n' +
+    '  "make": "Mercedes-Benz",\n' +
+    '  "model": "CLA 250",\n' +
+    '  "msrp_original": 38000,\n' +
+    '  "current_private_low": 9500,\n' +
+    '  "current_private_high": 12500,\n' +
+    '  "current_dealer_low": 8000,\n' +
+    '  "current_dealer_high": 10500,\n' +
+    '  "depreciation_pct": 72,\n' +
+    '  "vehicle_class": "luxury",\n' +
+    '  "depreciation_schedule": [\n' +
+    '    {"year_label": "New (2017)", "pct_retained": 100, "value": 38000},\n' +
+    '    {"year_label": "1 yr", "pct_retained": 82, "value": 31160},\n' +
+    '    {"year_label": "2 yr", "pct_retained": 70, "value": 26600},\n' +
+    '    {"year_label": "3 yr", "pct_retained": 61, "value": 23180},\n' +
+    '    {"year_label": "4 yr", "pct_retained": 54, "value": 20520},\n' +
+    '    {"year_label": "5 yr", "pct_retained": 47, "value": 17860},\n' +
+    '    {"year_label": "6 yr", "pct_retained": 41, "value": 15580},\n' +
+    '    {"year_label": "7 yr", "pct_retained": 36, "value": 13680},\n' +
+    '    {"year_label": "8 yr", "pct_retained": 32, "value": 12160},\n' +
+    '    {"year_label": "9 yr (now)", "pct_retained": 28, "value": 10640, "current": true}\n' +
+    '  ],\n' +
+    '  "resale_factors": [\n' +
+    '    {"icon": "📉", "title": "Depreciation curve", "desc": "Explanation specific to this vehicle class"},\n' +
+    '    {"icon": "🔧", "title": "Maintenance impact", "desc": "How service records affect value"},\n' +
+    '    {"icon": "🔑", "title": "Trim & options", "desc": "Impact of AWD, packages, colour"},\n' +
+    '    {"icon": "📍", "title": "Regional market", "desc": "How ' + regName + ' market compares"},\n' +
+    '    {"icon": "⚠️", "title": "Risk factors", "desc": "Recalls, reliability, known issues"},\n' +
+    '    {"icon": "📈", "title": "Market trend", "desc": "Current used car market direction for this model"}\n' +
+    '  ],\n' +
+    '  "verdict": "One-sentence bottom line for a buyer or seller",\n' +
+    '  "listing_tip": "One actionable tip to maximize sale price"\n' +
+    '}\n\n' +
+    'Rules:\n' +
+    '- All monetary values in ' + curr + '\n' +
+    '- depreciation_schedule must span from model year to 2026 (adjust number of rows accordingly)\n' +
+    '- Mark the current year row with "current": true\n' +
+    '- Be realistic and accurate for ' + regName + ' used car market conditions in 2026\n' +
+    '- vehicle_class must be one of: economy, mid-range, luxury, truck, electric\n' +
+    '- Return ONLY JSON, no preamble, no markdown fences';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!resp.ok) throw new Error('API error ' + resp.status);
+    const data  = await resp.json();
+    const raw   = (data.content || []).map(b => b.text || '').join('');
+    const clean = raw.replace(/^```json\s*/i,'').replace(/```\s*$/,'').trim();
+    const v     = JSON.parse(clean);
+    renderResaleModal(v, flag, curr, mktDesc, regName);
+  } catch(err) {
+    document.getElementById('rv-body').innerHTML =
+      '<div style="padding:2rem;text-align:center;color:var(--ink-muted)">' +
+      '<p>&#x26A0; Could not load valuation data.</p>' +
+      '<p style="font-size:12px;margin-top:8px">' + err.message + '</p>' +
+      '<p style="font-size:12px;margin-top:8px">Check your connection or try again.</p></div>';
+  }
 }
+
+function renderResaleModal(v, flag, curr, mktDesc, regName) {
+  const dep    = v.depreciation_schedule || [];
+  const curRow = dep.find(r => r.current) || dep[dep.length-1] || {};
+  const msrp   = v.msrp_original || 0;
+  const curVal = curRow.value || v.current_private_low || 0;
+  const depPct = v.depreciation_pct || Math.round((1 - curVal/msrp)*100);
+  const colors = ['#c8dfc8','#b0d0b0','#98c098','#80b080','#68a068','#509050','#387038','#205820','#1a5c3a','#0f3d28','#0a3020'];
+  const isUS   = curr === 'USD';
+
+  const listingsHTML = isUS
+    ? '<a href="https://www.autotrader.com" target="_blank">AutoTrader.com</a> &middot; <a href="https://www.carmax.com" target="_blank">CarMax</a> &middot; <a href="https://www.cargurus.com" target="_blank">CarGurus.com</a> &middot; <a href="https://www.cars.com" target="_blank">Cars.com</a>'
+    : '<a href="https://www.autotrader.ca" target="_blank">AutoTrader.ca</a> &middot; <a href="https://www.kijiji.ca/b-cars-trucks" target="_blank">Kijiji Autos</a> &middot; <a href="https://www.cargurus.ca" target="_blank">CarGurus.ca</a>';
+
+  document.getElementById('rv-subtitle').textContent =
+    [v.year, v.make, v.model].filter(Boolean).join(' ') + ' · ' + mktDesc + ' · 2026 · Live AI Valuation';
+
+  document.getElementById('rv-body').innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">' +
+      '<span style="font-size:20px">' + flag + '</span>' +
+      '<span style="font-size:12px;font-weight:600;color:var(--ink-muted);letter-spacing:0.5px;text-transform:uppercase">' + curr + ' · ' + regName + ' · 2026</span>' +
+      '<span style="margin-left:auto;font-size:10px;font-weight:700;background:#e8f4ed;color:#1a5c3a;padding:3px 10px;border-radius:20px;letter-spacing:0.5px">&#x1F916; Live AI Valuation</span>' +
+    '</div>' +
+
+    '<div class="resale-hero">' +
+      '<div class="resale-tile">' +
+        '<div class="rt-label">Original MSRP (' + curr + ')</div>' +
+        '<div class="rt-val">$' + msrp.toLocaleString() + '</div>' +
+        '<div class="rt-sub">' + (v.year||'') + ' base price</div>' +
+      '</div>' +
+      '<div class="resale-tile highlight">' +
+        '<div class="rt-label">Est. private sale now</div>' +
+        '<div class="rt-val">$' + (v.current_private_low||0).toLocaleString() + '–$' + (v.current_private_high||0).toLocaleString() + '</div>' +
+        '<div class="rt-sub">' + regName + ' 2026</div>' +
+      '</div>' +
+      '<div class="resale-tile">' +
+        '<div class="rt-label">Dealer trade-in est.</div>' +
+        '<div class="rt-val">$' + (v.current_dealer_low||0).toLocaleString() + '–$' + (v.current_dealer_high||0).toLocaleString() + '</div>' +
+        '<div class="rt-sub">Typically 15–20% lower</div>' +
+      '</div>' +
+      '<div class="resale-tile">' +
+        '<div class="rt-label">Total depreciation</div>' +
+        '<div class="rt-val">' + depPct + '%</div>' +
+        '<div class="rt-sub">$' + (msrp - curVal).toLocaleString() + ' ' + curr + ' lost</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="depreciation-chart">' +
+      '<div class="info-section-title">Depreciation curve (' + curr + ') · AI estimated</div>' +
+      dep.map((d, i) =>
+        '<div class="dep-row">' +
+          '<span class="dep-year">' + d.year_label + '</span>' +
+          '<div class="dep-track"><div class="dep-fill" style="width:' + d.pct_retained + '%;background:' + (d.current ? '#1a5c3a' : (colors[i] || '#509050')) + '">' +
+            '<span style="color:' + (d.pct_retained > 25 ? '#fff' : 'transparent') + '">' + d.pct_retained + '% retained</span>' +
+          '</div></div>' +
+          '<span class="dep-val">$' + (d.value||0).toLocaleString() + '</span>' +
+        '</div>'
+      ).join('') +
+    '</div>' +
+
+    '<div>' +
+      '<div class="info-section-title">Key resale factors · AI analysis</div>' +
+      '<div class="factors-grid">' +
+        (v.resale_factors || []).map(f =>
+          '<div class="factor-item">' +
+            '<div class="factor-icon">' + (f.icon||'📊') + '</div>' +
+            '<div class="factor-text">' +
+              '<div class="f-title">' + f.title + '</div>' +
+              '<div class="f-desc">' + f.desc + '</div>' +
+            '</div>' +
+          '</div>'
+        ).join('') +
+      '</div>' +
+    '</div>' +
+
+    (v.verdict ? '<div class="resale-verdict"><strong>Bottom line:</strong> ' + v.verdict + (v.listing_tip ? '<br><strong>&#x1F4A1; Seller tip:</strong> ' + v.listing_tip : '') + '</div>' : '') +
+
+    '<p class="modal-note" style="margin-top:1rem">Compare live listings: ' + listingsHTML + '<br><span style="opacity:0.6">Valuation generated by Claude AI based on market data. Verify with a licensed appraiser for transactions.</span></p>';
+}
+
 function closeResaleModal() {
   document.getElementById('resale-modal').classList.remove('open');
   document.body.style.overflow = '';
@@ -1465,6 +1789,196 @@ function closeResaleModal() {
 function closeResaleModalOnOverlay(e) {
   if (e.target === document.getElementById('resale-modal')) closeResaleModal();
 }
+
+/* ══════════════════════════════
+   FIND MECHANIC
+   ══════════════════════════════ */
+
+function detectVehicleClass(vehicleStr) {
+  const v = vehicleStr.toLowerCase();
+  if (/mercedes|bmw|audi|lexus|porsche|jaguar|maserati|bentley|ferrari|lamborghini|rolls|infiniti|acura|cadillac|lincoln/.test(v))
+    return { label:'European / Luxury', icon:'&#x1F3CE;', specialties:['European vehicle specialist','Luxury auto technician','Mercedes-Benz certified','AMG & turbocharged engines','Advanced diagnostics (STAR, ISTA)'] };
+  if (/ford|chevrolet|chevy|gmc|dodge|ram|jeep|chrysler/.test(v))
+    return { label:'American / Domestic', icon:'&#x1F6E3;', specialties:['Domestic vehicle specialist','American drivetrain','Powertrain & transmission','Truck & SUV specialist','OBD-II diagnostics'] };
+  if (/toyota|honda|nissan|mazda|subaru|mitsubishi|hyundai|kia|genesis/.test(v))
+    return { label:'Asian / Japanese', icon:'&#x1F697;', specialties:['Japanese vehicle specialist','Asian car technician','CVT & hybrid systems','Timing belt & chain','TPMS & advanced safety systems'] };
+  if (/tesla|rivian|lucid|polestar|ev|electric/.test(v))
+    return { label:'Electric Vehicle', icon:'&#x26A1;', specialties:['EV battery specialist','High-voltage systems certified','Electric drivetrain','Charging system repair','Battery management systems'] };
+  if (/truck|pickup|f-150|f150|silverado|ram 1500|tacoma|tundra/.test(v))
+    return { label:'Truck / SUV', icon:'&#x1F6FB;', specialties:['Truck & 4WD specialist','Suspension & lift kits','Towing & hitch systems','Off-road specialist','Heavy duty drivetrain'] };
+  return { label:'General Auto', icon:'&#x1F527;', specialties:['Full-service auto repair','Multi-brand certified','Engine & transmission','Brake & suspension','Diagnostics & electrical'] };
+}
+
+function openMechanicModal() {
+  const vehicle  = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  const postal   = document.getElementById('inp-postal').value.trim();
+  const country  = getSelectedCountry();
+  const regCode  = getSelectedProvince();
+  const region   = getRegionData(country, regCode);
+  const vClass   = detectVehicleClass(vehicle);
+
+  document.getElementById('mechanic-modal-sub').textContent = vClass.label + ' specialists near you';
+  document.getElementById('mechanic-ctx-vehicle').textContent = vehicle;
+  document.getElementById('mechanic-ctx-location').textContent = postal || (region ? region.name : 'your location');
+  document.getElementById('mechanic-ctx-type').innerHTML = vClass.icon + ' ' + vClass.label;
+
+  // Pre-fill ZIP with whatever is in the search box
+  if (postal) {
+    document.getElementById('mechanic-zip-input').value = postal;
+  }
+
+  document.getElementById('mechanic-list-container').innerHTML =
+    '<div class="mechanic-empty">Enter your ZIP or postal code above and click <strong>Search Mechanics</strong> to find specialists near you.</div>';
+
+  document.getElementById('mechanic-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Auto-search if postal already filled
+  if (postal) searchMechanics();
+}
+
+async function searchMechanics() {
+  const zip     = document.getElementById('mechanic-zip-input').value.trim();
+  const vehicle = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  const country = getSelectedCountry();
+  const vClass  = detectVehicleClass(vehicle);
+  const btn     = document.getElementById('mechanic-search-btn');
+  const container = document.getElementById('mechanic-list-container');
+
+  if (!zip) {
+    container.innerHTML = '<div class="mechanic-empty">&#x26A0; Please enter a ZIP or postal code to search.</div>';
+    return;
+  }
+
+  // Update context bar
+  document.getElementById('mechanic-ctx-location').textContent = zip;
+
+  btn.disabled = true;
+  btn.textContent = 'Searching...';
+  container.innerHTML = '<div class="mechanic-loading"><div class="mechanic-spinner"></div>Finding ' + vClass.label + ' specialists near ' + zip + '...</div>';
+
+  const isUS     = country === 'US';
+  const currSym  = isUS ? 'USD' : 'CAD';
+  const cityHint = isUS ? 'US city names' : 'Canadian city names';
+
+  const prompt = `You are a mechanic directory API. Return ONLY valid JSON, no markdown, no extra text.
+
+Find 6 auto repair shops specializing in "${vClass.label}" vehicles near ZIP/postal code "${zip}" in ${isUS ? 'the United States' : 'Canada'}.
+
+Return this exact JSON structure:
+{
+  "location_desc": "short description of the area (e.g. Houston, TX area)",
+  "mechanics": [
+    {
+      "name": "Shop name",
+      "address": "Street address, City, ${isUS ? 'State abbreviation' : 'Province abbreviation'}",
+      "phone": "${isUS ? '555-555-0100 format' : '555-555-0100 format'}",
+      "rating": 4.5,
+      "reviews": 120,
+      "distance_km": 2.3,
+      "specialties": ["specialty 1", "specialty 2", "specialty 3"],
+      "certified": ["Certification 1", "Certification 2"],
+      "hours": "Mon-Fri 8am-6pm, Sat 9am-3pm",
+      "price_range": "$$ (${currSym}80-120/hr)",
+      "highlight": "One sentence unique selling point"
+    }
+  ]
+}
+
+Rules:
+- Use realistic ${cityHint} close to the ZIP/postal code "${zip}"
+- Specialties must be relevant to "${vClass.label}" vehicles (e.g. ${vClass.specialties.slice(0,3).join(', ')})
+- Ratings between 3.8 and 5.0, reviews between 20 and 500
+- Distance between 0.5 and 25 km
+- Mix of independent shops and dealership service centers
+- Certifications relevant to vehicle class (ASE, OEM-certified, etc.)
+- Return exactly 6 mechanics`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!resp.ok) throw new Error('API error ' + resp.status);
+    const data = await resp.json();
+    const raw  = (data.content || []).map(b => b.text || '').join('');
+    const clean = raw.replace(/^```json\s*/i,'').replace(/```$/,'').trim();
+    const parsed = JSON.parse(clean);
+
+    renderMechanics(parsed, vClass, zip);
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<div class="mechanic-empty">&#x26A0; Could not load results. Check your connection and try again.<br><small style="opacity:0.6">' + err.message + '</small></div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Search Mechanics';
+  }
+}
+
+function renderMechanics(data, vClass, zip) {
+  const container = document.getElementById('mechanic-list-container');
+  const mechanics = data.mechanics || [];
+
+  if (!mechanics.length) {
+    container.innerHTML = '<div class="mechanic-empty">No mechanics found for this location. Try a nearby ZIP code.</div>';
+    return;
+  }
+
+  // Update subtitle
+  document.getElementById('mechanic-modal-sub').textContent =
+    mechanics.length + ' ' + vClass.label + ' specialists found near ' + (data.location_desc || zip);
+
+  container.innerHTML = '<div class="mechanic-list">' +
+    mechanics.map((m, i) => {
+      const stars = Math.round(m.rating);
+      const starHtml = Array.from({length:5}, (_,j) => j < stars ? '&#x2605;' : '&#x2606;').join('');
+      const specTags = (m.specialties || []).slice(0,3).map(s =>
+        '<span class="mechanic-tag spec">' + s + '</span>'
+      ).join('');
+      const certTags = (m.certified || []).slice(0,2).map(c =>
+        '<span class="mechanic-tag">' + c + '</span>'
+      ).join('');
+      const phone = m.phone || '';
+      const distTxt = m.distance_km ? m.distance_km.toFixed(1) + ' km away' : '';
+      return '<div class="mechanic-card" style="animation:fadeUp 0.3s ease ' + (i*0.07) + 's both">' +
+        '<div class="mechanic-avatar">' + vClass.icon + '</div>' +
+        '<div class="mechanic-info">' +
+          '<div class="mechanic-name">' + m.name + '</div>' +
+          '<div class="mechanic-address">&#x1F4CD; ' + m.address + '</div>' +
+          '<div class="mechanic-address" style="margin-top:3px">&#x23F0; ' + (m.hours||'Call for hours') + ' &nbsp;&middot;&nbsp; ' + (m.price_range||'') + '</div>' +
+          (m.highlight ? '<div class="mechanic-address" style="margin-top:4px;font-style:italic;color:var(--ink-soft)">&#x2018;' + m.highlight + '&#x2019;</div>' : '') +
+          '<div class="mechanic-tags" style="margin-top:6px">' + specTags + certTags + '</div>' +
+        '</div>' +
+        '<div class="mechanic-right">' +
+          '<div class="mechanic-rating">' + starHtml + ' <span>' + (m.rating||'').toFixed(1) + ' (' + (m.reviews||0) + ')</span></div>' +
+          (distTxt ? '<div class="mechanic-dist">' + distTxt + '</div>' : '') +
+          (phone ? '<a class="mechanic-call" href="tel:' + phone.replace(/[^0-9]/g,'') + '">' + phone + '</a>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('') +
+  '</div>';
+}
+
+function closeMechanicModal() {
+  document.getElementById('mechanic-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeMechanicModalOnOverlay(e) {
+  if (e.target === document.getElementById('mechanic-modal')) closeMechanicModal();
+}
+
+// Also close mechanic modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeAgents(); closeVehicleModal(); closeResaleModal(); closeMechanicModal();
+  }
+});
 </script>
 </body>
 </html>
