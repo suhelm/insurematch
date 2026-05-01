@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InsureMatch — Ontario Auto Insurance Comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --ink-soft: #3a3a3a;
+    --ink-muted: #7a7a7a;
+    --paper: #faf9f7;
+    --paper-warm: #f3f1ed;
+    --paper-card: #ffffff;
+    --accent: #1a5c3a;
+    --accent-light: #e8f4ed;
+    --accent-glow: rgba(26,92,58,0.12);
+    --gold: #b8860b;
+    --gold-light: #fdf6e3;
+    --red: #8b1a1a;
+    --red-light: #fdf0f0;
+    --amber: #7a4f00;
+    --amber-light: #fef8ec;
+    --border: rgba(15,15,15,0.10);
+    --border-strong: rgba(15,15,15,0.18);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,249,247,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--ink); text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-tag {
+    font-size: 11px; font-weight: 500; color: var(--ink-muted);
+    background: var(--paper-warm);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 10px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--ink);
+    color: #fff;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 120%, rgba(26,92,58,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1.2rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 4px 14px; border-radius: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+  }
+  .hero h1 em { color: #6fcf97; font-style: normal; }
+  .hero p {
+    font-size: 1.05rem; color: rgba(255,255,255,0.65);
+    max-width: 520px; margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+
+  /* ─── VEHICLE CARD ─── */
+  .vehicle-strip {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 10px 20px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .vehicle-strip .label {
+    font-size: 12px; color: rgba(255,255,255,0.4);
+    font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .vehicle-strip .value { font-size: 14px; font-weight: 500; color: #fff; }
+  .vehicle-strip .vin {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.06);
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .vehicle-strip .badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+    background: #1a5c3a; color: #6fcf97; letter-spacing: 0.3px;
+  }
+  .sep { width: 1px; height: 24px; background: rgba(255,255,255,0.12); }
+
+  /* ─── MAIN CONTENT ─── */
+  .main { max-width: 920px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* ─── LOOKUP PANEL ─── */
+  .lookup-panel {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+  }
+  .lookup-title {
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;
+  }
+  .lookup-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-group label { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
+  .field-group input, .field-group select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    color: var(--ink);
+    background: var(--paper-warm);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field-group input:focus, .field-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .field-group input.postal { font-family: 'DM Mono', monospace; letter-spacing: 1.5px; text-transform: uppercase; width: 130px; }
+  .field-group input.vehicle { width: 240px; }
+  .field-group select { width: 180px; }
+  .update-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: #fff; background: var(--accent);
+    border: none; border-radius: var(--radius-sm);
+    padding: 9px 22px; cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    align-self: flex-end;
+  }
+  .update-btn:hover { background: #145030; }
+  .update-btn:active { transform: scale(0.98); }
+  .zone-info {
+    margin-top: 10px; padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 500;
+    display: none;
+  }
+  .zone-info.show { display: block; }
+  .zone-low { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(26,92,58,0.2); }
+  .zone-medium { background: var(--amber-light); color: var(--amber); border: 1px solid rgba(122,79,0,0.2); }
+  .zone-high { background: var(--red-light); color: var(--red); border: 1px solid rgba(139,26,26,0.2); }
+  .error-msg { font-size: 12px; color: var(--red); margin-top: 6px; display: none; }
+  .error-msg.show { display: block; }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 600; letter-spacing: -0.5px;
+  }
+  .result-count {
+    font-size: 12px; color: var(--ink-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ─── INSURANCE CARDS ─── */
+  .cards-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  .ins-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.6rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+  .ins-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+  .ins-card.top-pick {
+    border-color: var(--accent);
+    border-width: 2px;
+  }
+  .top-badge {
+    position: absolute; top: -12px; left: 20px;
+    background: var(--accent); color: #fff;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 12px; border-radius: 20px;
+  }
+  .rank-num {
+    position: absolute; top: 1.2rem; right: 1.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--ink-muted);
+    background: var(--paper-warm);
+    border: 1px solid var(--border);
+    padding: 2px 8px; border-radius: 20px;
+  }
+
+  .card-top { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+  .insurer-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    border: 1px solid var(--border);
+    background: var(--paper-warm);
+  }
+  .insurer-info { flex: 1; }
+  .insurer-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+  .insurer-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .stars-row { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+  .stars { color: var(--gold); font-size: 13px; letter-spacing: 1px; }
+  .rating-val { font-size: 12px; color: var(--ink-muted); font-family: 'DM Mono', monospace; }
+
+  .price-col { text-align: right; flex-shrink: 0; }
+  .price-mo { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--ink); line-height: 1; }
+  .price-label { font-size: 11px; color: var(--ink-muted); }
+  .price-yr { font-size: 12px; color: var(--ink-muted); margin-top: 3px; font-family: 'DM Mono', monospace; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pc-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .pros .pc-label { color: var(--accent); }
+  .cons .pc-label { color: var(--red); }
+  .pc-list { list-style: none; }
+  .pc-list li {
+    font-size: 12.5px; color: var(--ink-soft);
+    padding: 3px 0; display: flex; align-items: flex-start; gap: 6px;
+    line-height: 1.4;
+  }
+  .pc-list li .dot { flex-shrink: 0; margin-top: 5px; width: 5px; height: 5px; border-radius: 50%; }
+  .pros .dot { background: var(--accent); }
+  .cons .dot { background: var(--red); }
+
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; flex-wrap: wrap; gap: 8px; }
+  .quote-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    text-decoration: none; border: 1px solid rgba(26,92,58,0.3);
+    border-radius: var(--radius-sm); padding: 7px 16px;
+    transition: background 0.15s;
+  }
+  .quote-link:hover { background: var(--accent-light); }
+  .quote-link svg { width: 13px; height: 13px; }
+
+  .savings-tag {
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+    background: var(--accent-light); color: var(--accent);
+  }
+
+  .agent-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); padding: 7px 16px;
+    background: var(--paper-warm);
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .agent-btn:hover { background: var(--paper-card); border-color: var(--ink-muted); }
+  .agent-btn svg { width: 13px; height: 13px; }
+
+  .footer-btns { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  /* ─── AGENTS MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.45);
+    align-items: center; justify-content: center;
+    padding: 1.5rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--paper-card);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.20);
+    width: 100%; max-width: 680px;
+    max-height: 90vh; overflow-y: auto;
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn {
+    from { opacity:0; transform: translateY(20px) scale(0.98); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--paper-card);
+    z-index: 2;
+  }
+  .modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 600;
+  }
+  .modal-header .insurer-context {
+    font-size: 12px; color: var(--ink-muted); margin-top: 2px;
+  }
+  .modal-close {
+    background: var(--paper-warm); border: 1px solid var(--border);
+    border-radius: 8px; width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: var(--ink-muted);
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: var(--paper-card); color: var(--ink); }
+  .modal-body { padding: 1.25rem 1.5rem; }
+  .modal-search {
+    width: 100%; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; padding: 9px 14px;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--paper-warm); color: var(--ink);
+    outline: none; margin-bottom: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .modal-search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .agent-list { display: flex; flex-direction: column; gap: 10px; }
+  .agent-card {
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px; background: var(--paper-warm);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .agent-card:hover { border-color: var(--accent); background: var(--accent-light); }
+  .agent-avatar {
+    width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+  }
+  .agent-info { flex: 1; }
+  .agent-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .agent-meta { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .agent-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+  .agent-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
+    padding: 2px 7px; border-radius: 20px;
+    background: var(--paper-card); border: 1px solid var(--border);
+    color: var(--ink-muted);
+  }
+  .agent-contact {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0;
+  }
+  .agent-phone {
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink-soft); font-weight: 500;
+  }
+  .contact-btn {
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    border: 1px solid rgba(26,92,58,0.3); border-radius: 6px;
+    padding: 4px 10px; background: transparent; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+    text-decoration: none;
+  }
+  .contact-btn:hover { background: var(--accent-light); }
+  .modal-note {
+    font-size: 11px; color: var(--ink-muted); text-align: center;
+    margin-top: 1.25rem; line-height: 1.6;
+  }
+  .modal-note a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 500px) {
+    .agent-contact { display: none; }
+  }
+
+  /* ─── EXTRA ACTION BUTTONS ─── */
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    border-radius: var(--radius-sm); padding: 9px 18px;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    text-decoration: none;
+  }
+  .action-btn:active { transform: scale(0.98); }
+  .action-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .action-btn.vehicle-btn {
+    color: #1a4f7a; background: #e6f1fb;
+    border: 1px solid rgba(26,79,122,0.25);
+  }
+  .action-btn.vehicle-btn:hover { background: #cde2f5; border-color: rgba(26,79,122,0.4); }
+  .action-btn.resale-btn {
+    color: #7a4f00; background: #fef3dc;
+    border: 1px solid rgba(122,79,0,0.25);
+  }
+  .action-btn.resale-btn:hover { background: #fde8b2; border-color: rgba(122,79,0,0.4); }
+
+  .lookup-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+  /* ─── INFO MODAL SHARED ─── */
+  .info-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+    padding: 1.5rem;
+  }
+  .info-modal-overlay.open { display: flex; }
+  .info-modal {
+    background: var(--paper-card);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+    width: 100%; max-width: 700px;
+    max-height: 92vh; overflow-y: auto;
+    animation: modalIn 0.25s ease;
+  }
+  .info-modal-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 1.4rem 1.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--paper-card); z-index: 2;
+  }
+  .info-modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 600; line-height: 1.2;
+  }
+  .info-modal-header .sub { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+  .info-modal-close {
+    background: var(--paper-warm); border: 1px solid var(--border);
+    border-radius: 8px; width: 32px; height: 32px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: var(--ink-muted);
+  }
+  .info-modal-close:hover { background: var(--paper-card); color: var(--ink); }
+  .info-modal-body { padding: 1.4rem 1.6rem 1.6rem; }
+
+  /* ─── VEHICLE INFO MODAL ─── */
+  .vin-hero {
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    border-radius: var(--radius-sm); padding: 1.2rem 1.4rem;
+    color: #fff; margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .vin-car-icon { font-size: 2.5rem; }
+  .vin-hero-text .car-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; }
+  .vin-hero-text .car-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 3px; }
+  .vin-hero-text .vin-code { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; background: rgba(255,255,255,0.08); display: inline-block; padding: 2px 8px; border-radius: 4px; }
+
+  .info-sections { display: flex; flex-direction: column; gap: 1.25rem; }
+  .info-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .spec-tile {
+    background: var(--paper-warm); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px;
+  }
+  .spec-tile .spec-label { font-size: 10px; color: var(--ink-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .spec-tile .spec-val { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .spec-tile .spec-sub { font-size: 11px; color: var(--ink-muted); margin-top: 1px; }
+
+  .safety-bar { margin-top: 8px; }
+  .safety-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+  .safety-row .s-label { font-size: 12px; color: var(--ink-soft); width: 140px; flex-shrink: 0; }
+  .s-track { flex: 1; height: 7px; background: var(--paper-warm); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+  .s-fill { height: 100%; border-radius: 99px; background: var(--accent); }
+  .s-score { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink-muted); width: 28px; text-align: right; }
+
+  .recall-box {
+    background: #fef8ec; border: 1px solid rgba(122,79,0,0.2);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    font-size: 12.5px; color: var(--amber); line-height: 1.6;
+  }
+  .recall-box strong { display: block; margin-bottom: 3px; }
+  .no-recall { background: var(--accent-light); border-color: rgba(26,92,58,0.2); color: var(--accent); }
+
+  /* ─── RESALE MODAL ─── */
+  .resale-hero {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem;
+  }
+  .resale-tile {
+    background: var(--paper-warm); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 1rem 1.1rem; text-align: center;
+  }
+  .resale-tile.highlight { background: var(--accent); border-color: var(--accent); }
+  .resale-tile .rt-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); margin-bottom: 6px; }
+  .resale-tile.highlight .rt-label { color: rgba(255,255,255,0.65); }
+  .resale-tile .rt-val { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--ink); line-height: 1; }
+  .resale-tile.highlight .rt-val { color: #fff; }
+  .resale-tile .rt-sub { font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
+  .resale-tile.highlight .rt-sub { color: rgba(255,255,255,0.65); }
+
+  .depreciation-chart { margin-bottom: 1.25rem; }
+  .dep-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .dep-year { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--ink-muted); width: 40px; flex-shrink: 0; }
+  .dep-track { flex: 1; height: 22px; background: var(--paper-warm); border-radius: 5px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+  .dep-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; }
+  .dep-fill span { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+  .dep-val { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--ink-soft); width: 70px; text-align: right; flex-shrink: 0; }
+
+  .factors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .factor-item { display: flex; gap: 10px; align-items: flex-start; }
+  .factor-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .factor-text .f-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .factor-text .f-desc { font-size: 11.5px; color: var(--ink-muted); margin-top: 2px; line-height: 1.4; }
+
+  .resale-verdict {
+    background: var(--paper-warm); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    font-size: 12.5px; color: var(--ink-soft); line-height: 1.6;
+    margin-top: 1rem;
+  }
+  .resale-verdict strong { color: var(--ink); }
+
+  @media (max-width: 520px) {
+    .resale-hero { grid-template-columns: 1fr 1fr; }
+    .factors-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─── TIPS BANNER ─── */
+  .tips-banner {
+    margin-top: 2.5rem;
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+  }
+  .tips-banner h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; margin-bottom: 1rem; color: #fff;
+  }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .tip-item { font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+  .tip-item strong { color: #6fcf97; font-weight: 600; display: block; margin-bottom: 3px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 11px; color: var(--ink-muted);
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .ins-card:nth-child(1) { animation-delay: 0.05s; }
+  .ins-card:nth-child(2) { animation-delay: 0.10s; }
+  .ins-card:nth-child(3) { animation-delay: 0.15s; }
+  .ins-card:nth-child(4) { animation-delay: 0.20s; }
+  .ins-card:nth-child(5) { animation-delay: 0.25s; }
+  .ins-card:nth-child(6) { animation-delay: 0.30s; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 3.5rem 1.25rem 2.5rem; }
+    .card-top { flex-wrap: wrap; }
+    .price-col { text-align: left; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .lookup-row { flex-direction: column; }
+    .field-group input.vehicle { width: 100%; }
+    .field-group select { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Insure<span>Match</span></a>
+  <span class="nav-tag">Ontario · 2026</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Auto Insurance Comparison</div>
+  <h1>Find the <em>lowest rate</em><br>for your vehicle in Ontario</h1>
+  <p>Real insurer estimates sorted by price — adjusted for your postal code risk zone, vehicle class, and coverage level.</p>
+  <div class="vehicle-strip" id="vehicle-strip">
+    <div>
+      <div class="label">Vehicle</div>
+      <div class="value" id="strip-vehicle">2017 Mercedes-Benz CLA 250</div>
+    </div>
+    <div class="sep"></div>
+    <div>
+      <div class="label">VIN</div>
+      <div class="vin" id="strip-vin">WDDSJ4GB8HN400526</div>
+    </div>
+    <div class="sep"></div>
+    <div>
+      <div class="label">Coverage</div>
+      <div class="value" id="strip-coverage">Minimum Liability</div>
+    </div>
+    <div class="sep"></div>
+    <div class="badge" id="strip-zone">📍 N2G — Medium risk</div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- LOOKUP PANEL -->
+  <div class="lookup-panel">
+    <div class="lookup-title">Adjust your quote parameters</div>
+    <div class="lookup-row">
+      <div class="field-group">
+        <label>Vehicle (Year · Make · Model)</label>
+        <input class="vehicle" id="inp-vehicle" type="text" value="2017 Mercedes-Benz CLA 250" placeholder="e.g. 2020 Honda Civic">
+      </div>
+      <div class="field-group">
+        <label>Coverage level</label>
+        <select id="inp-coverage">
+          <option value="min" selected>Minimum Liability</option>
+          <option value="std">Standard Full Coverage</option>
+          <option value="prem">Premium Full Coverage</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Ontario postal code</label>
+        <input class="postal" id="inp-postal" type="text" maxlength="7" value="N2G 1A1" placeholder="N2G 1A1">
+      </div>
+      <button class="update-btn" onclick="updateRates()">Update rates →</button>
+    </div>
+    <div class="lookup-actions">
+      <button class="action-btn vehicle-btn" onclick="openVehicleModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Know Your Vehicle
+      </button>
+      <button class="action-btn resale-btn" onclick="openResaleModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        Resale Value
+      </button>
+    </div>
+    <div class="zone-info zone-medium show" id="zone-info">
+      📍 <strong>Kitchener-Waterloo (N2G)</strong> — Medium risk zone. Rates at provincial average.
+    </div>
+    <div class="error-msg" id="error-msg">⚠ Please enter a valid Ontario postal code (e.g. N2G 1A1).</div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section-header">
+    <h2>Estimated quotes — lowest first</h2>
+    <span class="result-count" id="result-count">6 insurers · Ontario</span>
+  </div>
+
+  <div class="cards-grid" id="cards-grid"></div>
+
+  <!-- TIPS -->
+  <div class="tips-banner">
+    <h3>How to get the best rate</h3>
+    <div class="tips-grid">
+      <div class="tip-item"><strong>Get 3+ quotes</strong>Comparing providers can save $250–$850/year in Ontario. Use ratehub.ca or rates.ca simultaneously.</div>
+      <div class="tip-item"><strong>Bundle home + auto</strong>Most major insurers offer 15–25% off when you bundle your home and auto policies.</div>
+      <div class="tip-item"><strong>Try telematics</strong>Usage-based programs (myDrive, MyAdvantage, MyPace) can cut premiums 10–30% for safe drivers.</div>
+      <div class="tip-item"><strong>Postal code matters</strong>Moving from Brampton to Kitchener can cut your insurance by 25–35% on the same vehicle.</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>InsureMatch — Ontario Auto Insurance Comparison Tool · 2026</p>
+  <p>Estimates based on published rate data. Actual premiums depend on driving history, age, and insurer underwriting. Always confirm with a licensed broker.</p>
+  <p style="margin-top:8px">
+    Compare live quotes: <a href="https://ratehub.ca" target="_blank">RateHub.ca</a> ·
+    <a href="https://rates.ca" target="_blank">Rates.ca</a> ·
+    <a href="https://www.thinkinsure.ca" target="_blank">ThinkInsure</a>
+  </p>
+</footer>
+
+<script>
+const INSURERS = [
+  { name:"Sonnet Insurance", icon:"💻", sub:"Direct online — owned by Economical Insurance", stars:4.1, baseMo:155, url:"https://www.sonnet.ca", urlLabel:"sonnet.ca", pros:["100% online — instant quotes","Competitive luxury vehicle rates","Fast digital policy management","No broker or agent fees"], cons:["No in-person agent support","Fewer endorsement options","Claims process fully digital only"] },
+  { name:"Belairdirect", icon:"📱", sub:"Direct insurer — backed by Intact Financial (A+)", stars:4.2, baseMo:165, url:"https://www.belairdirect.com", urlLabel:"belairdirect.com", pros:["First North American online insurer (1997)","Strong app — claim tracking & roadside","Usage-based discount up to 25%","Solid Intact Financial backing"], cons:["Limited agent interaction","Luxury vehicle surcharges apply","Some complaints on claim delays"] },
+  { name:"TD Insurance", icon:"🏦", sub:"Direct — group discounts for alumni & professionals", stars:4.0, baseMo:175, url:"https://www.td.com/ca/en/personal-banking/products/insurance/auto-insurance", urlLabel:"td.com", pros:["TD MyAdvantage app rewards safe driving","Strong group and alumni discounts","Good digital policy tools","Widely available across Ontario"], cons:["Best rates require group program access","Pricier for luxury without group access","Mixed claims satisfaction reviews"] },
+  { name:"CAA Insurance", icon:"⭐", sub:"Best overall rated in Ontario — Rates.ca 2025", stars:4.6, baseMo:185, url:"https://www.caasco.com/insurance/auto", urlLabel:"caasco.com", pros:["#1 overall insurer in Ontario 2025","Excellent trustworthiness & transparency","MyPace usage-based program","Top-rated app and policy documents"], cons:["CAA membership required for best rates","Slightly higher premium for luxury class","Fewer fully online self-serve options"] },
+  { name:"Intact Insurance", icon:"🛡", sub:"Canada's largest P&C insurer — AM Best A+ rating", stars:4.3, baseMo:195, url:"https://www.intactinsurance.com", urlLabel:"intactinsurance.com", pros:["Specialist in luxury & specialty vehicles","myDrive app earns safe-driver discounts","Extensive Rely Network repair shops","Handles high-risk and standard drivers alike"], cons:["Higher base premiums for luxury class","Requires a broker to access quotes","Some repair network delay complaints"] },
+  { name:"Aviva Canada", icon:"🏠", sub:"Strong bundling & safety feature discounts", stars:4.1, baseMo:200, url:"https://www.aviva.ca", urlLabel:"aviva.ca", pros:["Discount for advanced safety features","Disappearing deductible program","Strong accident forgiveness options","24/7 phone claims support"], cons:["No dedicated mobile app","Higher premiums than digital-first rivals","Broker required to access quotes"] }
+];
+
+const COVERAGE_MULT = { min: 1.0, std: 1.55, prem: 1.95 };
+const COVERAGE_LABELS = { min:"Minimum Liability", std:"Standard Full Coverage", prem:"Premium Full Coverage" };
+
+const POSTAL_ZONES = {
+  "K0":{label:"Low risk",adj:-0.12,city:"Rural Eastern Ontario"},
+  "P0":{label:"Low risk",adj:-0.15,city:"Northern Ontario"},
+  "K7":{label:"Low risk",adj:-0.10,city:"Kingston area"},
+  "K8":{label:"Low risk",adj:-0.10,city:"Pembroke / Ottawa Valley"},
+  "N0":{label:"Low risk",adj:-0.08,city:"Rural Southwestern Ontario"},
+  "P1":{label:"Low risk",adj:-0.12,city:"Sault Ste. Marie area"},
+  "P2":{label:"Low risk",adj:-0.13,city:"Northern Ontario"},
+  "P3":{label:"Low risk",adj:-0.10,city:"Greater Sudbury"},
+  "P6":{label:"Low risk",adj:-0.10,city:"Sudbury region"},
+  "N2G":{label:"Medium risk",adj:0.00,city:"Kitchener-Waterloo"},
+  "N2H":{label:"Medium risk",adj:0.00,city:"Kitchener"},
+  "N2J":{label:"Medium risk",adj:0.00,city:"Waterloo"},
+  "N2K":{label:"Medium risk",adj:0.00,city:"Waterloo"},
+  "N2L":{label:"Medium risk",adj:0.00,city:"Waterloo"},
+  "N2M":{label:"Medium risk",adj:0.00,city:"Kitchener"},
+  "N2N":{label:"Medium risk",adj:0.00,city:"Kitchener"},
+  "N2P":{label:"Medium risk",adj:0.00,city:"Kitchener"},
+  "N2R":{label:"Medium risk",adj:0.00,city:"Kitchener"},
+  "N2T":{label:"Medium risk",adj:0.00,city:"Waterloo"},
+  "N2V":{label:"Medium risk",adj:0.00,city:"Waterloo"},
+  "N3":{label:"Medium risk",adj:0.05,city:"Cambridge / Brantford"},
+  "K1":{label:"Medium risk",adj:0.05,city:"Ottawa"},
+  "K2":{label:"Medium risk",adj:0.05,city:"Ottawa"},
+  "K4":{label:"Medium risk",adj:0.02,city:"Ottawa region"},
+  "N6":{label:"Medium risk",adj:0.05,city:"London, Ontario"},
+  "N5":{label:"Medium risk",adj:0.03,city:"Woodstock / Ingersoll"},
+  "L7":{label:"Medium risk",adj:0.08,city:"Barrie / Collingwood"},
+  "L3":{label:"Medium risk",adj:0.10,city:"Newmarket / Aurora"},
+  "L4":{label:"Medium risk",adj:0.10,city:"Richmond Hill / Markham"},
+  "M":{label:"High risk",adj:0.20,city:"Toronto"},
+  "L6":{label:"High risk",adj:0.22,city:"Mississauga / Oakville"},
+  "L5":{label:"High risk",adj:0.25,city:"Mississauga"},
+  "L6P":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6R":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6S":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6T":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6V":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6W":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6X":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L6Z":{label:"High risk",adj:0.35,city:"Brampton"},
+  "L7A":{label:"High risk",adj:0.30,city:"Brampton area"},
+};
+
+function lookupZone(raw) {
+  const c = raw.replace(/\s/g,'').toUpperCase();
+  return POSTAL_ZONES[c.slice(0,3)] || POSTAL_ZONES[c.slice(0,2)] || POSTAL_ZONES[c.slice(0,1)] || null;
+}
+
+function stars(r) {
+  return Array.from({length:5}, (_,i) => i < Math.round(r) ? '★' : '☆').join('');
+}
+
+function renderCards(adj, covMult, lowestBase) {
+  const grid = document.getElementById('cards-grid');
+  const sorted = [...INSURERS]
+    .map(ins => ({...ins, finalMo: Math.round(ins.baseMo * (1+adj) * covMult)}))
+    .sort((a,b) => a.finalMo - b.finalMo);
+
+  grid.innerHTML = '';
+
+  sorted.forEach((ins, idx) => {
+    const isTop = idx === 0;
+    const annual = ins.finalMo * 12;
+    const savingVsAvg = isTop ? null : Math.round((ins.finalMo - sorted[0].finalMo) * 12);
+
+    const card = document.createElement('div');
+    card.className = 'ins-card' + (isTop ? ' top-pick' : '');
+    card.style.animationDelay = (idx * 0.06) + 's';
+
+    card.innerHTML = `
+      ${isTop ? '<span class="top-badge">Best price</span>' : ''}
+      <span class="rank-num">#${idx+1}</span>
+      <div class="card-top">
+        <div class="insurer-icon">${ins.icon}</div>
+        <div class="insurer-info">
+          <div class="insurer-name">${ins.name}</div>
+          <div class="insurer-sub">${ins.sub}</div>
+          <div class="stars-row">
+            <span class="stars">${stars(ins.stars)}</span>
+            <span class="rating-val">${ins.stars.toFixed(1)}/5</span>
+          </div>
+        </div>
+        <div class="price-col">
+          <div class="price-label">estimated</div>
+          <div class="price-mo">$${ins.finalMo}</div>
+          <div class="price-label">/month</div>
+          <div class="price-yr">$${annual.toLocaleString()} / year</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pc-label">Pros</div>
+          <ul class="pc-list">
+            ${ins.pros.map(p => `<li><span class="dot"></span>${p}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="pc-label">Cons</div>
+          <ul class="pc-list">
+            ${ins.cons.map(c => `<li><span class="dot"></span>${c}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="footer-btns">
+          <a class="quote-link" href="${ins.url}" target="_blank">
+            Get quote at ${ins.urlLabel}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+          <button class="agent-btn" onclick="openAgents('${ins.name}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
+            Browse Agents
+          </button>
+        </div>
+        ${savingVsAvg ? `<span class="savings-tag">+$${savingVsAvg}/yr vs best</span>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function updateRates() {
+  const postalRaw = document.getElementById('inp-postal').value.trim();
+  const coverage = document.getElementById('inp-coverage').value;
+  const vehicle = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  const errorEl = document.getElementById('error-msg');
+  const zoneEl = document.getElementById('zone-info');
+
+  const clean = postalRaw.replace(/\s/g,'').toUpperCase();
+  if (clean.length < 3 || !/^[A-Z]\d[A-Z]/i.test(clean)) {
+    errorEl.classList.add('show');
+    return;
+  }
+  errorEl.classList.remove('show');
+
+  const zone = lookupZone(postalRaw);
+  const adj = zone ? zone.adj : 0;
+  const covMult = COVERAGE_MULT[coverage];
+  const fsa = clean.slice(0,3);
+
+  // Update zone info
+  zoneEl.className = 'zone-info show zone-' + (zone ? (zone.label==='Low risk'?'low':zone.label==='High risk'?'high':'medium') : 'medium');
+  if (zone) {
+    const pct = Math.round(Math.abs(adj)*100);
+    const dir = adj < 0 ? `${pct}% below` : adj > 0 ? `${pct}% above` : 'at';
+    zoneEl.innerHTML = `📍 <strong>${zone.city} (${fsa})</strong> — ${zone.label} zone. Rates ${dir} provincial average.`;
+  } else {
+    zoneEl.innerHTML = `📍 <strong>${fsa}</strong> — Zone not found. Showing provincial average rates.`;
+  }
+
+  // Update hero strip
+  document.getElementById('strip-vehicle').textContent = vehicle;
+  document.getElementById('strip-coverage').textContent = COVERAGE_LABELS[coverage];
+  document.getElementById('strip-zone').textContent = `📍 ${fsa} — ${zone ? zone.label : 'Ontario'}`;
+
+  renderCards(adj, covMult);
+}
+
+// Initial render
+renderCards(0, 1.0);
+</script>
+
+<!-- AGENTS MODAL -->
+<div class="modal-overlay" id="agents-modal" onclick="closeAgentsOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3>Browse Licensed Agents</h3>
+        <div class="insurer-context" id="modal-insurer-ctx">Showing agents for all insurers</div>
+      </div>
+      <button class="modal-close" onclick="closeAgents()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input class="modal-search" type="text" id="agent-search" placeholder="Search by name, city, or specialty…" oninput="filterAgents()">
+      <div class="agent-list" id="agent-list"></div>
+      <p class="modal-note">
+        These are sample licensed broker profiles for Ontario. For the full registry, visit the
+        <a href="https://www.fsrao.ca/consumers/auto-insurance/finding-agent-or-broker" target="_blank">FSRAO agent directory</a>
+        or <a href="https://www.ribo.com/find-a-broker/" target="_blank">RIBO broker search</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+const AGENTS = [
+  { name:"Sarah Patel", city:"Kitchener, ON", phone:"519-555-0182", specialties:["Luxury vehicles","Bundling deals"], insurer:"Sonnet Insurance",     color:"#1a5c3a", initials:"SP" },
+  { name:"James Okafor", city:"Waterloo, ON", phone:"519-555-0241", specialties:["First-time buyers","High-risk"], insurer:"Sonnet Insurance",         color:"#2d6a8c", initials:"JO" },
+  { name:"Linda Marchetti", city:"Cambridge, ON", phone:"519-555-0378", specialties:["Multi-vehicle","Home & auto"], insurer:"Belairdirect",            color:"#7a3a00", initials:"LM" },
+  { name:"Ryan Cho", city:"Kitchener, ON", phone:"519-555-0194", specialties:["Telematics savings","Young drivers"], insurer:"Belairdirect",            color:"#5c3a6e", initials:"RC" },
+  { name:"Priya Sharma", city:"Guelph, ON", phone:"519-555-0456", specialties:["Luxury & specialty","Accident forgiveness"], insurer:"TD Insurance",   color:"#1a4f7a", initials:"PS" },
+  { name:"David Kowalski", city:"Waterloo, ON", phone:"519-555-0317", specialties:["Alumni discounts","Group plans"], insurer:"TD Insurance",           color:"#4a5c1a", initials:"DK" },
+  { name:"Anita Rousseau", city:"Kitchener, ON", phone:"519-555-0523", specialties:["CAA members","Usage-based"], insurer:"CAA Insurance",              color:"#7a1a2e", initials:"AR" },
+  { name:"Marcus Williams", city:"Brantford, ON", phone:"519-555-0288", specialties:["Roadside add-ons","Multi-policy"], insurer:"CAA Insurance",       color:"#1a5c4a", initials:"MW" },
+  { name:"Fatima Al-Hassan", city:"Kitchener, ON", phone:"519-555-0614", specialties:["Luxury vehicles","Commercial"], insurer:"Intact Insurance",      color:"#5c1a1a", initials:"FA" },
+  { name:"Tom Bergstrom", city:"Waterloo, ON", phone:"519-555-0392", specialties:["Claims support","High-value assets"], insurer:"Intact Insurance",    color:"#1a3a5c", initials:"TB" },
+  { name:"Grace Nakamura", city:"Cambridge, ON", phone:"519-555-0471", specialties:["Safety discounts","New Canadians"], insurer:"Aviva Canada",        color:"#5c4a1a", initials:"GN" },
+  { name:"Eric Fontaine", city:"Guelph, ON", phone:"519-555-0539", specialties:["Home & auto bundle","Accident forgiveness"], insurer:"Aviva Canada",   color:"#2a1a5c", initials:"EF" },
+];
+
+let currentInsurer = null;
+
+function renderAgents(agents) {
+  const list = document.getElementById('agent-list');
+  if (!agents.length) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--ink-muted);text-align:center;padding:1.5rem 0">No agents found matching your search.</p>';
+    return;
+  }
+  list.innerHTML = agents.map(a => `
+    <div class="agent-card">
+      <div class="agent-avatar" style="background:${a.color}">${a.initials}</div>
+      <div class="agent-info">
+        <div class="agent-name">${a.name}</div>
+        <div class="agent-meta">📍 ${a.city} &nbsp;·&nbsp; ${a.insurer}</div>
+        <div class="agent-tags">
+          ${a.specialties.map(s => `<span class="agent-tag">${s}</span>`).join('')}
+        </div>
+      </div>
+      <div class="agent-contact">
+        <span class="agent-phone">${a.phone}</span>
+        <a class="contact-btn" href="tel:${a.phone.replace(/[^0-9]/g,'')}">Call agent</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterAgents() {
+  const q = document.getElementById('agent-search').value.toLowerCase();
+  const pool = currentInsurer ? AGENTS.filter(a => a.insurer === currentInsurer) : AGENTS;
+  const filtered = q ? pool.filter(a =>
+    a.name.toLowerCase().includes(q) ||
+    a.city.toLowerCase().includes(q) ||
+    a.specialties.some(s => s.toLowerCase().includes(q)) ||
+    a.insurer.toLowerCase().includes(q)
+  ) : pool;
+  renderAgents(filtered);
+}
+
+function openAgents(insurerName) {
+  currentInsurer = insurerName;
+  document.getElementById('modal-insurer-ctx').textContent = `Showing agents for ${insurerName}`;
+  document.getElementById('agent-search').value = '';
+  filterAgents();
+  document.getElementById('agents-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAgents() {
+  document.getElementById('agents-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeAgentsOnOverlay(e) {
+  if (e.target === document.getElementById('agents-modal')) closeAgents();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAgents(); closeVehicleModal(); closeResaleModal(); } });
+</script>
+
+<!-- KNOW YOUR VEHICLE MODAL -->
+<div class="info-modal-overlay" id="vehicle-modal" onclick="closeVehicleModalOnOverlay(event)">
+  <div class="info-modal">
+    <div class="info-modal-header">
+      <div>
+        <h3>Know Your Vehicle</h3>
+        <div class="sub" id="vm-subtitle">2017 Mercedes-Benz CLA 250 · VIN WDDSJ4GB8HN400526</div>
+      </div>
+      <button class="info-modal-close" onclick="closeVehicleModal()">&#x2715;</button>
+    </div>
+    <div class="info-modal-body" id="vm-body"></div>
+  </div>
+</div>
+
+<!-- RESALE VALUE MODAL -->
+<div class="info-modal-overlay" id="resale-modal" onclick="closeResaleModalOnOverlay(event)">
+  <div class="info-modal">
+    <div class="info-modal-header">
+      <div>
+        <h3>Resale Value Estimate</h3>
+        <div class="sub" id="rv-subtitle">2017 Mercedes-Benz CLA 250 · Ontario market</div>
+      </div>
+      <button class="info-modal-close" onclick="closeResaleModal()">&#x2715;</button>
+    </div>
+    <div class="info-modal-body" id="rv-body"></div>
+  </div>
+</div>
+
+<script>
+const VEHICLE_DB_SPEC = {
+  make:"Mercedes-Benz", model:"CLA 250", year:2017,
+  trim:"CLA 250 Sedan", body:"4-door Sedan (C117)", drivetrain:"FWD (4MATIC AWD optional)",
+  engine:"2.0L Turbocharged I4", power:"208 hp @ 5,500 rpm", torque:"258 lb-ft @ 1,200-4,000 rpm",
+  transmission:"7-speed dual-clutch automatic",
+  fuelType:"Premium unleaded (91+)", mpgCity:24, mpgHwy:35,
+  weight:"3,274 lbs", length:'182.2"', width:'70.7"', wheelbase:'106.3"', cargo:"13.1 cu ft",
+  msrpOriginal:"$34,400 CAD (base)", origin:"Assembled in Kecskemét, Hungary",
+  safetyRatings:{ Overall:83, "Frontal crash":90, "Side crash":88, "Rollover":75, "Rear crash":72 },
+  recalls:[
+    { id:"2018-059", desc:"Airbag inflator may rupture (Takata)", date:"Jun 2018", status:"Remedy available" },
+    { id:"2019-011", desc:"Brake booster vacuum pump may leak", date:"Mar 2019", status:"Remedy available" }
+  ],
+  features:["8.0 inch Comand infotainment","Heated front seats","LED headlights","Blind spot assist","Attention assist","Collision prevention assist","7-speed 7G-DCT gearbox","Sport-tuned suspension"],
+  vinDecoded:{ WMI:"WDD", VDS:"SJ4GB", VIS:"8HN400526", Plant:"Kecskemét, Hungary", "Check digit":"8 OK" }
+};
+
+function buildVehicleBody() {
+  const v = VEHICLE_DB_SPEC;
+  const sr = v.safetyRatings;
+  return `
+    <div class="vin-hero">
+      <div class="vin-car-icon">&#x1F697;</div>
+      <div class="vin-hero-text">
+        <div class="car-title">${v.year} ${v.make} ${v.model}</div>
+        <div class="car-sub">${v.trim} &middot; ${v.origin}</div>
+        <div class="vin-code">VIN: WDDSJ4GB8HN400526</div>
+      </div>
+    </div>
+    <div class="info-sections">
+      <div>
+        <div class="info-section-title">Engine &amp; Performance</div>
+        <div class="spec-grid">
+          <div class="spec-tile"><div class="spec-label">Engine</div><div class="spec-val">${v.engine}</div></div>
+          <div class="spec-tile"><div class="spec-label">Power</div><div class="spec-val">${v.power}</div></div>
+          <div class="spec-tile"><div class="spec-label">Torque</div><div class="spec-val">${v.torque}</div></div>
+          <div class="spec-tile"><div class="spec-label">Transmission</div><div class="spec-val">${v.transmission}</div></div>
+          <div class="spec-tile"><div class="spec-label">Fuel type</div><div class="spec-val">${v.fuelType}</div></div>
+          <div class="spec-tile"><div class="spec-label">Fuel economy</div><div class="spec-val">${v.mpgCity} city / ${v.mpgHwy} hwy MPG</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="info-section-title">Dimensions &amp; Specs</div>
+        <div class="spec-grid">
+          <div class="spec-tile"><div class="spec-label">Body</div><div class="spec-val">${v.body}</div></div>
+          <div class="spec-tile"><div class="spec-label">Drivetrain</div><div class="spec-val">${v.drivetrain}</div></div>
+          <div class="spec-tile"><div class="spec-label">Curb weight</div><div class="spec-val">${v.weight}</div></div>
+          <div class="spec-tile"><div class="spec-label">Length &times; Width</div><div class="spec-val">${v.length} &times; ${v.width}</div></div>
+          <div class="spec-tile"><div class="spec-label">Wheelbase</div><div class="spec-val">${v.wheelbase}</div></div>
+          <div class="spec-tile"><div class="spec-label">Cargo space</div><div class="spec-val">${v.cargo}</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="info-section-title">Safety ratings (NHTSA / IIHS est.)</div>
+        <div class="safety-bar">
+          ${Object.entries(sr).map(([k,val]) => `
+          <div class="safety-row">
+            <span class="s-label">${k}</span>
+            <div class="s-track"><div class="s-fill" style="width:${val}%;background:${val>=85?'#1a5c3a':val>=70?'#b8860b':'#8b1a1a'}"></div></div>
+            <span class="s-score">${val}%</span>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="info-section-title">Active safety features</div>
+        <div class="spec-grid">
+          ${v.features.map(f => `<div class="spec-tile" style="padding:8px 12px"><div class="spec-val" style="font-size:12.5px">&#10003; ${f}</div></div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="info-section-title">Recalls &amp; safety campaigns</div>
+        ${v.recalls.map(r => `<div class="recall-box" style="margin-bottom:8px"><strong>&#9888; ${r.id} &mdash; ${r.date}</strong>${r.desc}<br><span style="font-size:11px;opacity:0.75">Status: ${r.status}</span></div>`).join('')}
+      </div>
+      <div>
+        <div class="info-section-title">VIN decode</div>
+        <div class="spec-grid">
+          ${Object.entries(v.vinDecoded).map(([k,val]) => `<div class="spec-tile"><div class="spec-label">${k}</div><div class="spec-val" style="font-family:'DM Mono',monospace;font-size:13px">${val}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="recall-box" style="background:#fdf0f0;border-color:rgba(139,26,26,0.2);color:#8b1a1a">
+        <strong>Insurance note</strong>
+        Luxury compact &mdash; elevated theft risk rating. Theft risk: Moderate-high (luxury badge). These factors contribute to elevated premiums vs. non-luxury vehicles.
+      </div>
+    </div>`;
+}
+
+function openVehicleModal() {
+  const vd = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  document.getElementById('vm-subtitle').textContent = vd + ' · VIN WDDSJ4GB8HN400526';
+  document.getElementById('vm-body').innerHTML = buildVehicleBody();
+  document.getElementById('vehicle-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeVehicleModal() {
+  document.getElementById('vehicle-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeVehicleModalOnOverlay(e) {
+  if (e.target === document.getElementById('vehicle-modal')) closeVehicleModal();
+}
+
+function buildResaleBody() {
+  const msrp = 38000;
+  const depSchedule = [
+    { label:"New (2017)", pct:100, val:38000 },
+    { label:"1 yr",       pct:82,  val:31160 },
+    { label:"2 yr",       pct:70,  val:26600 },
+    { label:"3 yr",       pct:61,  val:23180 },
+    { label:"4 yr",       pct:54,  val:20520 },
+    { label:"5 yr",       pct:47,  val:17860 },
+    { label:"6 yr",       pct:41,  val:15580 },
+    { label:"7 yr",       pct:36,  val:13680 },
+    { label:"8 yr",       pct:32,  val:12160 },
+    { label:"9 yr (now)", pct:28,  val:10640, current:true },
+  ];
+  const cur = depSchedule[depSchedule.length-1];
+  const depPct = 100 - cur.pct;
+  const colors = ['#c8dfc8','#b0d0b0','#98c098','#80b080','#68a068','#509050','#387038','#205820','#1a5c3a','#0f3d28'];
+
+  return `
+    <div class="resale-hero">
+      <div class="resale-tile">
+        <div class="rt-label">Original MSRP (CAD)</div>
+        <div class="rt-val">$${msrp.toLocaleString()}</div>
+        <div class="rt-sub">Base 2017 price</div>
+      </div>
+      <div class="resale-tile highlight">
+        <div class="rt-label">Est. market value now</div>
+        <div class="rt-val">$${cur.val.toLocaleString()}</div>
+        <div class="rt-sub">Ontario private sale 2026</div>
+      </div>
+      <div class="resale-tile">
+        <div class="rt-label">Total depreciation</div>
+        <div class="rt-val">${depPct}%</div>
+        <div class="rt-sub">$${(msrp-cur.val).toLocaleString()} lost</div>
+      </div>
+    </div>
+    <div class="depreciation-chart">
+      <div class="info-section-title">Depreciation curve — 9 years</div>
+      ${depSchedule.map((d,i) => `
+      <div class="dep-row">
+        <span class="dep-year">${d.label}</span>
+        <div class="dep-track">
+          <div class="dep-fill" style="width:${d.pct}%;background:${d.current?'#1a5c3a':colors[i]}">
+            <span style="color:${d.pct>25?'#fff':'transparent'}">${d.pct}% retained</span>
+          </div>
+        </div>
+        <span class="dep-val">$${d.val.toLocaleString()}</span>
+      </div>`).join('')}
+    </div>
+    <div>
+      <div class="info-section-title">Key resale factors for your CLA 250</div>
+      <div class="factors-grid">
+        <div class="factor-item"><div class="factor-icon">&#x1F4C9;</div><div class="factor-text"><div class="f-title">Luxury depreciation</div><div class="f-desc">Mercedes-Benz CLA depreciates faster than non-luxury compacts — typically 65-72% over 5 years.</div></div></div>
+        <div class="factor-item"><div class="factor-icon">&#x1F527;</div><div class="factor-text"><div class="f-title">Maintenance history</div><div class="f-desc">Full Mercedes service records can add $800-$1,500 to private sale value.</div></div></div>
+        <div class="factor-item"><div class="factor-icon">&#x1F511;</div><div class="factor-text"><div class="f-title">4MATIC premium</div><div class="f-desc">AWD variants command $1,000-$2,000 more on the Ontario used market vs. FWD.</div></div></div>
+        <div class="factor-item"><div class="factor-icon">&#x1F3A8;</div><div class="factor-text"><div class="f-title">Colour &amp; options</div><div class="f-desc">Neutral colours hold value best. Premium package options add $1,000-$3,000 over base.</div></div></div>
+        <div class="factor-item"><div class="factor-icon">&#x1F4CD;</div><div class="factor-text"><div class="f-title">Ontario market</div><div class="f-desc">K-W region is slightly below GTA pricing. Toronto listings run 5-8% higher for same vehicle.</div></div></div>
+        <div class="factor-item"><div class="factor-icon">&#x1F4CB;</div><div class="factor-text"><div class="f-title">Recall status</div><div class="f-desc">Open Takata airbag recall may reduce buyer confidence. Completing recall work before selling is advisable.</div></div></div>
+      </div>
+    </div>
+    <div class="resale-verdict">
+      <strong>Bottom line:</strong> Your 2017 Mercedes-Benz CLA 250 has an estimated private-sale value of <strong>$9,500-$12,500 CAD</strong> in Ontario (2026), depending on mileage, condition, and options. Dealer trade-in offers typically run 15-20% lower.
+    </div>
+    <p class="modal-note" style="margin-top:1rem">
+      Compare live listings: <a href="https://www.autotrader.ca" target="_blank">AutoTrader.ca</a> &middot;
+      <a href="https://www.kijiji.ca/b-cars-trucks" target="_blank">Kijiji Autos</a> &middot;
+      <a href="https://www.cargurus.ca" target="_blank">CarGurus.ca</a>
+    </p>`;
+}
+
+function openResaleModal() {
+  const vd = document.getElementById('inp-vehicle').value.trim() || '2017 Mercedes-Benz CLA 250';
+  document.getElementById('rv-subtitle').textContent = vd + ' · Ontario market 2026';
+  document.getElementById('rv-body').innerHTML = buildResaleBody();
+  document.getElementById('resale-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeResaleModal() {
+  document.getElementById('resale-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeResaleModalOnOverlay(e) {
+  if (e.target === document.getElementById('resale-modal')) closeResaleModal();
+}
+</script>
+</body>
+</html>
+
